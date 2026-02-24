@@ -30,12 +30,16 @@ bool probeTT (
     int depth,
     int alpha, 
     int beta,
-    TTEntry &TTOut
+    int ply,
+    TTEntry &TTOut,
+    int &scoreOut,
+    Move &moveOut
 );
 
 void storeTT(
     uint64_t key,
     int depth,
+    int ply,
     int score,
     TTFlag flag,
     Move bestMove
