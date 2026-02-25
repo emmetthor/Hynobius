@@ -20,6 +20,13 @@
 #include <thread>
 #include <chrono>
 
+void Search::printMoveStk() {
+    for (int i = 0; i < backIterator; i++) {
+        std::cout << moveStk[i] << ' ';
+    }
+    std::cout << '\n';
+}
+
 void printInfo(SearchInfo info) {
     std::cout << "info depth " << info.depth
          << " nodes " << info.nodes
@@ -138,6 +145,8 @@ SearchResult Search::searchRootCore(
     for (int i = 0; i < nMoves; i++) {
         Move move = moves[i];
 
+        moveStk[backIterator++] = move;
+
         // 遞迴下一層
         makeMove(board, move);
         //ENGINE_ASSERT(!isInCheck(board, player));
@@ -152,19 +161,13 @@ SearchResult Search::searchRootCore(
         );
 
         undoMove(board, move);
+        backIterator--;
 
         LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
 
         if (score > res.bestScore) {
             res.bestMove = move;
             res.bestScore = score;
-        }
-
-        if (score > alpha) {
-            alpha = score;
-        }
-        if (alpha >= beta) {
-            break; // root cut-off
         }
     }
 
@@ -198,7 +201,7 @@ int Search::negamax(
 
     // depth = 0 進入QS
     if (depth == 0) {
-        return eval.evaluateBoard(board, EVALUATE_MODE::FULL);
+        return (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
         // return quietscence(
         //     board,
         //     alpha,
@@ -213,9 +216,12 @@ int Search::negamax(
     int nMoves = generateAllLegalMoves(board, player, moves);
     totalMoves += nMoves;
 
+    // if (depth == 3) std::cout << "branch: " << nMoves << '\n';
+
     // 檢查 checkmate / stalemate
     if (nMoves == 0) {
         // LOG_DEBUG(DebugCategory::SEARCH, "no move!");
+        // std::cout << "checkmate\n" << board << '\n';
         if (isInCheck(board, player)) return -MATE_SCORE + ply;
         else return 0;
     }
@@ -226,6 +232,12 @@ int Search::negamax(
     for (int i = 0; i < nMoves; i++) {
         int searchDepth = depth - 1;
         Move move = moves[i];
+
+        moveStk[backIterator++] = move;
+
+        // if (depth == 4) {
+        //     printMoveStk();
+        // }
 
         // if (!move.isPromotion && move.capturePiece == Piece::EMPTY && depth >= 3 && !isInCheck(board, player)) {
         //     if (i >= 4) {
@@ -250,7 +262,6 @@ int Search::negamax(
             ply + 1
         );
 
-        bool reserch = 0;
         // if (i == 0) {
         //     // 第一步全搜
         //     score = -negamax(
@@ -285,9 +296,11 @@ int Search::negamax(
 
         undoMove(board, move);
 
-        if (score >= beta) {
-            return score;
-        }
+        backIterator--;
+
+        // if (score >= beta) {
+        //     return beta;
+        // }
 
         if (score > alpha) {
             alpha = score;

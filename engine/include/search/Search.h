@@ -54,6 +54,7 @@ private:
         int ply
     );
 
+    void printMoveStk();
 
     int negamaxNodes = 0;
     int qsNodes = 0;
@@ -63,6 +64,8 @@ private:
     int totalMoves = 0;
     int betaCutAtMove[5] = {};
     const int INF = 1e9;
+    Move moveStk[10];
+    int backIterator = 0;
 };
 
 void printInfo(SearchInfo info);
