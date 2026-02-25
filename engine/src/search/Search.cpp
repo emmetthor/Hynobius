@@ -72,8 +72,8 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
             int alpha = lastScore - window;
             int beta = lastScore + window;
 
-            alpha = -INF;
-            beta = INF;
+            // alpha = -INF;
+            // beta = INF;
 
             while (true) {
                 currentRes = searchRootCore(
@@ -163,7 +163,7 @@ SearchResult Search::searchRootCore(
         undoMove(board, move);
         backIterator--;
 
-        LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
+        // LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
 
         if (score > res.bestScore) {
             res.bestMove = move;
@@ -201,14 +201,14 @@ int Search::negamax(
 
     // depth = 0 進入QS
     if (depth == 0) {
-        return (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
-        // return quietscence(
-        //     board,
-        //     alpha,
-        //     beta,
-        //     player,
-        //     ply
-        // );
+        // return (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
+        return quietscence(
+            board,
+            alpha,
+            beta,
+            player,
+            ply
+        );
     }
 
     // 生成所有走法
@@ -227,17 +227,13 @@ int Search::negamax(
     }
 
     advanceMoves adv = {ttMove, killerMove[0][ply], killerMove[1][ply]};
-    //sortMove(board, moves, nMoves, adv);
+    sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++) {
         int searchDepth = depth - 1;
         Move move = moves[i];
 
         moveStk[backIterator++] = move;
-
-        // if (depth == 4) {
-        //     printMoveStk();
-        // }
 
         // if (!move.isPromotion && move.capturePiece == Piece::EMPTY && depth >= 3 && !isInCheck(board, player)) {
         //     if (i >= 4) {
@@ -253,61 +249,65 @@ int Search::negamax(
 
         makeMove(board, move);
 
-        score = -negamax(
-            board,
-            depth - 1,
-            -beta,
-            -alpha,
-            opponent(player),
-            ply + 1
-        );
+        // score = -negamax(
+        //     board,
+        //     depth - 1,
+        //     -beta,
+        //     -alpha,
+        //     opponent(player),
+        //     ply + 1
+        // );
 
-        // if (i == 0) {
-        //     // 第一步全搜
-        //     score = -negamax(
-        //         board,
-        //         depth - 1,
-        //         -beta,
-        //         -alpha,
-        //         opponent(player),
-        //         ply + 1
-        //     );
-        // } else {
-        //     score = -negamax(
-        //         board,
-        //         searchDepth,
-        //         -alpha - 1,
-        //         -alpha,
-        //         opponent(player),
-        //         ply + 1
-        //     );
-        //     if (score > alpha) {
-        //         reserch = 1;
-        //         score = -negamax(
-        //             board,
-        //             depth - 1,
-        //             -beta,
-        //             -alpha,
-        //             opponent(player),
-        //             ply + 1
-        //         );
-        //     }
-        // }
+        if (i == 0) {
+            // 第一步全搜
+            score = -negamax(
+                board,
+                depth - 1,
+                -beta,
+                -alpha,
+                opponent(player),
+                ply + 1
+            );
+        } else {
+            score = -negamax(
+                board,
+                searchDepth,
+                -alpha - 1,
+                -alpha,
+                opponent(player),
+                ply + 1
+            );
+            if (score > alpha) {
+                score = -negamax(
+                    board,
+                    depth - 1,
+                    -beta,
+                    -alpha,
+                    opponent(player),
+                    ply + 1
+                );
+            }
+        }
 
         undoMove(board, move);
 
         backIterator--;
 
-        // if (score >= beta) {
-        //     return beta;
-        // }
+        if (score > bestScore) {
+            bestScore = score;
+        }
 
         if (score > alpha) {
             alpha = score;
         }
+
+        if (alpha >= beta) {
+            //LOG_DEBUG(DebugCategory::SEARCH, "negamax cut | score=", score, " | alpha=", alpha, " | beta=", beta);
+            break;
+        }
     }
 
-    return alpha;
+    return bestScore;
 
     TTFlag flag;
     if (alpha <= oriAlpha) flag = UPPER;
