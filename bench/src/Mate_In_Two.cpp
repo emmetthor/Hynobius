@@ -43,7 +43,7 @@ testResult testMateInTwo(int testCnt) {
         Evaluate eval;
         int score = engine.fullInfoSearch(4).bestScore;
 
-        if (score != engine.MATE_BASIS - 3) {
+        if (score != MATE_SCORE - 3) {
             failCnt++;
             failed.push_back(fen);
         }

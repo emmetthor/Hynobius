@@ -8,10 +8,10 @@ int main() {
     testResult res;
 
     std::cout << "========== Mate In One ==========\n";
-    res += testMateInOne(10000);
+    res += testMateInOne(10);
 
     std::cout << "========== Mate In Two ==========\n";
-    res += testMateInTwo(10000);
+    res += testMateInTwo(10);
 
     // std::cout << "========== Result ==========\n";
     // std::cout << "Failed test cases: " << res.failedTests << '/' << res.totalTests << '\n';

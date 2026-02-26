@@ -20,6 +20,13 @@
 #include <thread>
 #include <chrono>
 
+void Search::printMoveStk() {
+    for (int i = 0; i < backIterator; i++) {
+        std::cout << moveStk[i] << ' ';
+    }
+    std::cout << '\n';
+}
+
 void printInfo(SearchInfo info) {
     std::cout << "info depth " << info.depth
          << " nodes " << info.nodes
@@ -47,6 +54,8 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
         SearchResult currentRes = {inValidMove, -INF};
         SearchInfo info;
 
+        //LOG_DEBUG(DebugCategory::SEARCH, "depth: ", d);
+
         if (d == 1) {
             currentRes = searchRootCore(
                 copyBoard,
@@ -62,6 +71,9 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
             int window = 30;
             int alpha = lastScore - window;
             int beta = lastScore + window;
+
+            // alpha = -INF;
+            // beta = INF;
 
             while (true) {
                 currentRes = searchRootCore(
@@ -133,6 +145,8 @@ SearchResult Search::searchRootCore(
     for (int i = 0; i < nMoves; i++) {
         Move move = moves[i];
 
+        moveStk[backIterator++] = move;
+
         // 遞迴下一層
         makeMove(board, move);
         //ENGINE_ASSERT(!isInCheck(board, player));
@@ -147,17 +161,13 @@ SearchResult Search::searchRootCore(
         );
 
         undoMove(board, move);
+        backIterator--;
+
+        // LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
 
         if (score > res.bestScore) {
             res.bestMove = move;
             res.bestScore = score;
-        }
-
-        if (score > alpha) {
-            alpha = score;
-        }
-        if (alpha >= beta) {
-            break; // root cut-off
         }
     }
 
@@ -176,27 +186,12 @@ int Search::negamax(
 
     //TT表 記憶化搜索
     ttProbe++;
+    int ttScore = 0;
     TTEntry tt;
-    Move TTMove;
-    if (probeTT(board.zobristKey, depth, alpha, beta, tt)) {
+    Move ttMove;
+    if (probeTT(board.zobristKey, depth, alpha, beta, ply, tt, ttScore, ttMove)) {
         ttHit++;
-
-        if (tt.depth >= depth) {
-            if (tt.flag == EXACT) {
-                ttCut++;
-                return tt.score;
-            }
-            if (tt.flag == LOWER && tt.score >= beta) {
-                ttCut++;
-                return beta;
-            }
-            if (tt.flag == UPPER && tt.score <= alpha) {
-                ttCut++;
-                return alpha;
-            }
-        }
-        
-        //if (isMoveLegal(board, tt.bestMove)) TTMove = tt.bestMove;
+        return ttScore;
     }
 
     int oriAlpha = alpha;
@@ -206,12 +201,13 @@ int Search::negamax(
 
     // depth = 0 進入QS
     if (depth == 0) {
+        // return (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
         return quietscence(
             board,
             alpha,
             beta,
             player,
-            0
+            ply
         );
     }
 
@@ -223,30 +219,42 @@ int Search::negamax(
     // 檢查 checkmate / stalemate
     if (nMoves == 0) {
         // LOG_DEBUG(DebugCategory::SEARCH, "no move!");
-        if (isInCheck(board, player)) return -INF + ply;
+        // std::cout << "checkmate\n" << board << '\n';
+        if (isInCheck(board, player)) return -MATE_SCORE + ply;
         else return 0;
     }
 
-    advanceMoves adv = {TTMove, killerMove[0][ply], killerMove[1][ply]};
+    advanceMoves adv = {ttMove, killerMove[0][ply], killerMove[1][ply]};
     sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++) {
         int searchDepth = depth - 1;
         Move move = moves[i];
 
-        if (!move.isPromotion && move.capturePiece == Piece::EMPTY && depth >= 3 && !isInCheck(board, player)) {
-            if (i >= 4) {
-                searchDepth--;
-            }
+        moveStk[backIterator++] = move;
 
-            if (i >= 7) {
-                searchDepth--;
-            }
-        }
+        // if (!move.isPromotion && move.capturePiece == Piece::EMPTY && depth >= 3 && !isInCheck(board, player)) {
+        //     if (i >= 4) {
+        //         searchDepth--;
+        //     }
+
+        //     if (i >= 7) {
+        //         searchDepth--;
+        //     }
+        // }
 
         int score = 0;
 
         makeMove(board, move);
+
+        // score = -negamax(
+        //     board,
+        //     depth - 1,
+        //     -beta,
+        //     -alpha,
+        //     opponent(player),
+        //     ply + 1
+        // );
 
         if (i == 0) {
             // 第一步全搜
@@ -267,7 +275,7 @@ int Search::negamax(
                 opponent(player),
                 ply + 1
             );
-            if (score > alpha && score < beta) {
+            if (score > alpha) {
                 score = -negamax(
                     board,
                     depth - 1,
@@ -281,31 +289,29 @@ int Search::negamax(
 
         undoMove(board, move);
 
-        if (score >= beta) {
-            betaCutAtMove[(i >= 4 ? 4 : i)]++;
-            // cutoff 存 LOWER
-            storeTT(board.zobristKey, depth, beta, LOWER, move);
+        backIterator--;
 
-            if (move.capturePiece == Piece::EMPTY) {
-                addKillerMove(move, ply);
-            }
-
-            return beta;
-        }
-        if (score > alpha) alpha = score;
         if (score > bestScore) {
             bestScore = score;
             bestMove = move;
-            hasMove = 1;
+        }
+
+        if (score > alpha) {
+            alpha = score;
+        }
+
+        if (alpha >= beta) {
+            //LOG_DEBUG(DebugCategory::SEARCH, "negamax cut | score=", score, " | alpha=", alpha, " | beta=", beta);
+            break;
         }
     }
 
     TTFlag flag;
-    if (bestScore <= oriAlpha) flag = UPPER;
-    else if (bestScore >= beta) flag = LOWER;
+    if (alpha <= oriAlpha) flag = UPPER;
+    else if (alpha >= beta) flag = LOWER;
     else flag = EXACT;
 
-    storeTT(board.zobristKey, depth, bestScore, flag, (hasMove ? bestMove : inValidMove));
+    storeTT(board.zobristKey, depth, ply, alpha, flag, (hasMove ? bestMove : inValidMove));
 
     return bestScore;
 }
@@ -319,7 +325,7 @@ int Search::quietscence(
 ) {
     qsNodes++;
     int standerdPoint = (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
-    if (standerdPoint >= beta) return beta;
+    if (standerdPoint >= beta) return standerdPoint;
     if (standerdPoint > alpha) alpha = standerdPoint;
 
     Move captureMoves[256];
@@ -355,7 +361,7 @@ int Search::quietscence(
 
         undoMove(board, move);
 
-        if (score >= beta) return beta;
+        if (score >= beta) return score;
         if (score > alpha) alpha = score;
     }
 

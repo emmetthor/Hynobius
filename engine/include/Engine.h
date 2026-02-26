@@ -22,7 +22,6 @@ public:
     void quit();
     void changePlayer();
     void setPlayer(Player player);
-    const int MATE_BASIS = 1e9;
 
 private:
     Board board;

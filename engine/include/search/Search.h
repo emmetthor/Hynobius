@@ -4,6 +4,8 @@
 #include "move/Move.h"
 #include "evaluate/Evaluate.h"
 
+constexpr int MATE_SCORE = 1e6;
+
 struct SearchInfo {
     int depth;
     int score;
@@ -52,15 +54,18 @@ private:
         int ply
     );
 
+    void printMoveStk();
 
     int negamaxNodes = 0;
     int qsNodes = 0;
     int ttProbe = 0;
     int ttHit = 0;
     int ttCut = 0;
-    const int INF = 1e9;
     int totalMoves = 0;
     int betaCutAtMove[5] = {};
+    const int INF = 1e9;
+    Move moveStk[10];
+    int backIterator = 0;
 };
 
 void printInfo(SearchInfo info);
