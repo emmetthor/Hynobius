@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(include)
 
 # add_definitions(-D_GLIBCXX_DEBUG)
-add_definitions(-DENGINE_DEBUG)
+# add_definitions(-DENGINE_DEBUG)
 
 # 目標檔案
 add_library(engine-core

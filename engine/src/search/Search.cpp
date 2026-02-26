@@ -189,10 +189,10 @@ int Search::negamax(
     int ttScore = 0;
     TTEntry tt;
     Move ttMove;
-    // if (probeTT(board.zobristKey, depth, alpha, beta, ply, tt, ttScore, ttMove)) {
-    //     ttHit++;
-    //     return ttScore;
-    // }
+    if (probeTT(board.zobristKey, depth, alpha, beta, ply, tt, ttScore, ttMove)) {
+        ttHit++;
+        return ttScore;
+    }
 
     int oriAlpha = alpha;
     int bestScore = -INF;
@@ -215,8 +215,6 @@ int Search::negamax(
     Move moves[256];
     int nMoves = generateAllLegalMoves(board, player, moves);
     totalMoves += nMoves;
-
-    // if (depth == 3) std::cout << "branch: " << nMoves << '\n';
 
     // 檢查 checkmate / stalemate
     if (nMoves == 0) {
