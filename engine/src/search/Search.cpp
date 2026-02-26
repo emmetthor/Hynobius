@@ -293,6 +293,7 @@ int Search::negamax(
 
         if (score > bestScore) {
             bestScore = score;
+            bestMove = move;
         }
 
         if (score > alpha) {
@@ -305,14 +306,14 @@ int Search::negamax(
         }
     }
 
-    return bestScore;
-
     TTFlag flag;
     if (alpha <= oriAlpha) flag = UPPER;
     else if (alpha >= beta) flag = LOWER;
     else flag = EXACT;
 
     storeTT(board.zobristKey, depth, ply, alpha, flag, (hasMove ? bestMove : inValidMove));
+
+    return bestScore;
 }
 
 int Search::quietscence(
