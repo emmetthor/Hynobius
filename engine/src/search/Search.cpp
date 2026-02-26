@@ -54,7 +54,7 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
         SearchResult currentRes = {inValidMove, -INF};
         SearchInfo info;
 
-        LOG_DEBUG(DebugCategory::SEARCH, "depth: ", d);
+        //LOG_DEBUG(DebugCategory::SEARCH, "depth: ", d);
 
         if (d == 1) {
             currentRes = searchRootCore(
