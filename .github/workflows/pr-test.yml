@@ -45,6 +45,11 @@ jobs:
       - name: M2 Test
         working-directory: ${{github.workspace}}/build
         run: ctest -R M2Test --verbose
+      
+      - name: BitMove Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -R BitMoveTest --verbose
+        
 
   sanitizers:
     needs: test   # 先通過 test 才跑 sanitizer

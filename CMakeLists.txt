@@ -87,3 +87,10 @@
     set_target_properties(test-m2 PROPERTIES WIN32_EXECUTABLE OFF)
 
     add_test(NAME M2Test COMMAND test-m2)
+
+    # test BitMove
+    add_executable(test-bitmove tests/Bit_Move_Correctness.cpp)
+    target_link_libraries(test-bitmove PRIVATE engine-core)
+    set_target_properties(test-bitmove PROPERTIES WIN32_EXECUTABLE OFF)
+
+    add_test(NAME BitMoveTest COMMAND test-bitmove)
