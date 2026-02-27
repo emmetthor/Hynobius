@@ -139,10 +139,6 @@ struct CastleMove {
     Piece rookPiece;
 };
 
-void printMove(const Move &move);
-
-void moveDebugPrint(const Move &move);
-
 bool isMoveLegal(const Board &board, const Move &move);
 
 bool isCastleLegal(const Board &board, const Move &move);
