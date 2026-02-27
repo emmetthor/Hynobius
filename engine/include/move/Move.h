@@ -32,7 +32,7 @@ constexpr BitMove PROMOTION_MASK = 1u << 19;
 inline Square getFromSquare(const BitMove move) {
     Square res = static_cast<Square>(move & FROM_MASK);
 
-    if (isValidSquare(res)) {
+    if (!isValidSquare(res)) {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid from square: ", res);
     }
 
@@ -40,9 +40,9 @@ inline Square getFromSquare(const BitMove move) {
 }
 
 inline Square getToSquare(const BitMove move) {
-    Square res = static_cast<Square>(move & TO_MASK);
-
-    if (isValidSquare(res)) {
+    Square res = static_cast<Square>((move & TO_MASK) >> 6);
+    
+    if (!isValidSquare(res)) {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid to square: ", res);
     }
 
@@ -50,7 +50,7 @@ inline Square getToSquare(const BitMove move) {
 }
 
 inline Piece getPromotePiece(const BitMove move) {
-    int pieceIndex = static_cast<int>(move & PROMOTE_PIECE_MASK);
+    int pieceIndex = static_cast<int>((move & PROMOTE_PIECE_MASK) >> 12);
 
     if (!isValidPieceIndex(pieceIndex)) {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid piece index: ", pieceIndex);
@@ -75,21 +75,19 @@ inline bool getPromotion(const BitMove move) {
     return static_cast<bool>(move & PROMOTION_MASK);
 }
 
-inline BitMove makeMove(
-    const Position &from,
-    const Position &to,
-    const Piece &promotePiece,
-    bool isCapture,
-    bool isCastle,
-    bool isEnPassant,
-    bool isPromotion
+inline BitMove makeBitMove(
+    const Square from,
+    const Square to,
+    const Piece promotePiece,
+    const bool isCapture,
+    const bool isCastle,
+    const bool isEnPassant,
+    const bool isPromotion
 ) {
     BitMove res = 0;
     
-    res |= from.row;
-    res |= (from.col << 3);
-    res |= (to.row << 6);
-    res |= (to.col << 9);
+    res |= from;
+    res |= (to << 6);
     res |= (pieceToIndex(promotePiece) << 12);
     res |= (static_cast<int>(isCapture) << 16);
     res |= (static_cast<int>(isCastle) << 17);

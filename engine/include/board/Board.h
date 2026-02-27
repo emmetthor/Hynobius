@@ -39,7 +39,8 @@ inline Position squareToPosition(Square square) {
 }
 
 inline bool isValidSquare(Square square) {
-    return (0 <= square && square < 64 ? true : false);
+    int intSquare = static_cast<int>(square);
+    return ((0 <= intSquare && intSquare < 64) ? true : false);
 }
 
 inline bool isInBoard(Position pos) {

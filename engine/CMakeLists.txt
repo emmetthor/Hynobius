@@ -66,9 +66,15 @@ set_target_properties(chess-analysis-engine PROPERTIES WIN32_EXECUTABLE OFF)
 
 enable_testing()
 
-add_executable(test-engine ../bench/src/Bench.cpp)
+add_executable(test-bench ../bench/src/Bench.cpp)
 target_link_libraries(bench-lib PUBLIC engine-core)
-target_link_libraries(test-engine bench-lib)
-set_target_properties(test-engine PROPERTIES WIN32_EXECUTABLE OFF)
+target_link_libraries(test-bench bench-lib)
+set_target_properties(test-bench PROPERTIES WIN32_EXECUTABLE OFF)
 
 add_test(NAME EngineTest COMMAND test-engine)
+
+# test correctness
+
+add_executable(test-correctness ../tests/Tests.cpp)
+target_link_libraries(test-correctness PRIVATE engine-core)
+set_target_properties(test-correctness PROPERTIES WIN32_EXECUTABLE OFF)
