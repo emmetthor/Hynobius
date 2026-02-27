@@ -96,7 +96,6 @@ inline BitMove makeBitMove(
 
     return res;
 }
-
 struct Move {
     Player player;
 
@@ -144,3 +143,16 @@ bool isMoveLegal(const Board &board, const Move &move);
 bool isCastleLegal(const Board &board, const Move &move);
 
 CastleMove getCastleMove(Move &move);
+
+inline Move bitMovetoOriMove(const Board &board, const BitMove &move) {
+    Move res;
+    res.from = squareToPosition(getFromSquare(move));
+    res.to = squareToPosition(getToSquare(move));
+    res.capturePiece = board.at(res.to);
+    res.isEnPassant = getEnPassant(move);
+    res.isPromotion = getPromotion(move);
+    res.promotionPiece = getPromotePiece(move);
+    res.movePiece = board.at(res.from);
+    res.player = (isWhite(res.movePiece) ? Player::WHITE : Player::BLACK);
+    return res;
+}

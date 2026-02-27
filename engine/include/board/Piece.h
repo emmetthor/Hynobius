@@ -87,5 +87,5 @@ inline bool isSameColor(Piece p1, Piece p2) {
 }
 
 inline bool isValidPieceIndex(int index) {
-    return (1 <= index && index <= 12 ? true : false);
+    return (0 <= index && index <= 12 ? true : false);
 }

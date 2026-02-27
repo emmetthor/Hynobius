@@ -17,15 +17,12 @@ int generatePieceMoves(
     const Board &board,
     Player player,
     Piece movePiece,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
     ENGINE_ASSERT(movePiece != Piece::EMPTY);
 
     int cnt = 0;
-    Move move;
-    move.player = player;
-    move.movePiece = movePiece;
     int pieceCount = board.getPieceCount(movePiece);
     const auto *posArray = board.getPiecePos(movePiece);
 
@@ -33,15 +30,19 @@ int generatePieceMoves(
             
     for (int i = 0; i < pieceCount; i++) {
         Position pos = posArray[i];
-        move.from = pos;
 
         int n = generatePiecePosFromPos(board, pos, movePiece, posBuffer);
 
         for (int i = 0; i < n; i++) {
-            move.to = posBuffer[i];
-            move.capturePiece = board.at({move.to});
-
-            buffer[cnt++] = move;
+            buffer[cnt++] = makeBitMove(
+                positionToSquare(pos),
+                positionToSquare(posBuffer[i]),
+                Piece::EMPTY,
+                (board.at(posBuffer[i]) == Piece::EMPTY ? false : true),
+                false,
+                false,
+                false
+            );
         }
     }
 
@@ -52,31 +53,32 @@ int generatePieceCapture(
     const Board &board,
     Player player,
     Piece movePiece,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
     ENGINE_ASSERT(movePiece != Piece::EMPTY);
 
     int cnt = 0;
-    Move move;
-    move.player = player;
-    move.movePiece = movePiece;
     int pieceCount = board.getPieceCount(movePiece);
     const auto *posArray = board.getPiecePos(movePiece);
-
+    
     Position posBuffer[30];
             
     for (int i = 0; i < pieceCount; i++) {
         Position pos = posArray[i];
-        move.from = pos;
 
         int n = generatePieceCaptureFromPos(board, pos, movePiece, posBuffer);
 
         for (int i = 0; i < n; i++) {
-            move.to = posBuffer[i];
-            move.capturePiece = board.at({move.to});
-
-            buffer[cnt++] = move;
+            buffer[cnt++] = makeBitMove(
+                positionToSquare(pos),
+                positionToSquare(posBuffer[i]),
+                Piece::EMPTY,
+                (board.at(posBuffer[i]) == Piece::EMPTY ? false : true),
+                false,
+                false,
+                false
+            );
         }
     }
 
@@ -86,7 +88,7 @@ int generatePieceCapture(
 int generateAllMoves(
     const Board &board,
     const Player player,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
     ENGINE_ASSERT(validatePiecePos(board));
@@ -114,76 +116,102 @@ int generateAllMoves(
     const auto *posArray = board.getPiecePos(pawn);
 
     for (int i = 0; i < pawnCount; i++) {
+        Position from = posArray[i];
         auto [r, c] = posArray[i];
-        Move move;
-        move.player = player;
-        move.from = posArray[i];
-        move.movePiece = pawn;
-        move.isPromotion = 0;
+         Position to = {r + dr, c};
 
         // 一步
-        move.to = {r + dr, c};
-        move.capturePiece = board.at(move.to);
-
-        if (isInBoard(move.to) && move.capturePiece == Piece::EMPTY) {
-            if (move.to.row == promoteRank) {
+        if (isInBoard(to) && board.at(to) == Piece::EMPTY) {
+            if (r + dr == promoteRank) {
                 for (auto promo : {knight, bishop, rook, queen}) {
-                    move.isPromotion = 1;
-                    move.promotionPiece = promo;
-                    buffer[cnt++] = move;
+                    buffer[cnt++] = makeBitMove(
+                        positionToSquare(from),
+                        positionToSquare(to),
+                        promo,
+                        false,
+                        false,
+                        false,
+                        true
+                    );
                 }
-                move.isPromotion = 0;
             } else {
-                buffer[cnt++] = move;
+                buffer[cnt++] = makeBitMove(
+                    positionToSquare(from),
+                    positionToSquare(to),
+                    Piece::EMPTY,
+                    false,
+                    false,
+                    false,
+                    false
+                );
             }
         }
 
         // 兩步
         if (r == startRank) {
-            move.to = {r + 2 * dr, c};
             Position mid = {r + dr, c};
+            Position toTwoStep = {r + 2 * dr, c};
 
-            if (isInBoard(move.to) && board.at(move.to) == Piece::EMPTY && board.at(mid) == Piece::EMPTY) {
-                move.capturePiece = Piece::EMPTY; // 兩步不能 capture
-                buffer[cnt++] = move;
+            if (isInBoard(toTwoStep) && board.at(toTwoStep) == Piece::EMPTY && board.at(mid) == Piece::EMPTY) {
+                buffer[cnt++] = makeBitMove(
+                    positionToSquare(from),
+                    positionToSquare(toTwoStep),
+                    Piece::EMPTY,
+                    false,
+                    false,
+                    false,
+                    false
+                );
             }
         }
 
         // capture
         for (int dc : {-1, 1}) {
-            Position to = {r + dr, c + dc};
-            if (!isInBoard(to)) continue;
-            if (board.at(to) == Piece::EMPTY) continue;
-            if (isSameColor(board.at(to), pawn)) continue;
+            Position toCapture = {r + dr, c + dc};
+            if (!isInBoard(toCapture)) continue;
+            if (board.at(toCapture) == Piece::EMPTY) continue;
+            if (isSameColor(board.at(toCapture), pawn)) continue;
 
-            move.to = to;
-            move.capturePiece = board.at(to);
-            if (to.row == promoteRank) {
+            if (toCapture.row == promoteRank) {
                 for (auto promo : {knight, bishop, rook, queen}) {
-                    move.isPromotion = 1;
-                    move.promotionPiece = promo;
-                    buffer[cnt++] = move;
+                    buffer[cnt++] = makeBitMove(
+                        positionToSquare(from),
+                        positionToSquare(toCapture),
+                        promo,
+                        true,
+                        false,
+                        false,
+                        true
+                    );
                 }
-                move.isPromotion = 0;
             } else {
-                buffer[cnt++] = move;
+                buffer[cnt++] = makeBitMove(
+                    positionToSquare(from),
+                    positionToSquare(toCapture),
+                    Piece::EMPTY,
+                    true,
+                    false,
+                    false,
+                    false
+                );
             }
         }
     }
 
     // castle
-    for (auto len: {SHORT_CASTLE, LONG_CASTLE}) {
-        Move moveCastle;
-        moveCastle.castle = len;
-        moveCastle.player = player;
-        moveCastle.capturePiece = Piece::EMPTY;
+    //WARN 目前所有 castle move 皆不會生成
+    // for (auto len: {SHORT_CASTLE, LONG_CASTLE}) {
+    //     Move moveCastle;
+    //     moveCastle.castle = len;
+    //     moveCastle.player = player;
+    //     moveCastle.capturePiece = Piece::EMPTY;
 
-        CastleMove m = getCastleMove(moveCastle);
-        moveCastle.from = m.kingFrom;
-        moveCastle.to = m.kingTo;
+    //     CastleMove m = getCastleMove(moveCastle);
+    //     moveCastle.from = m.kingFrom;
+    //     moveCastle.to = m.kingTo;
 
-        buffer[cnt++] = moveCastle;
-    }
+    //     buffer[cnt++] = moveCastle;
+    // }
 
     return cnt;
 }
@@ -191,7 +219,7 @@ int generateAllMoves(
 int generateCaptureMoves(
     const Board &board,
     const Player player,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
     ENGINE_ASSERT(validatePiecePos(board));
@@ -219,33 +247,39 @@ int generateCaptureMoves(
     const auto *posArray = board.getPiecePos(pawn);
 
     for (int i = 0; i < pawnCount; i++) {
+        Position from = posArray[i];
         auto [r, c] = posArray[i];
-        Move move;
-        move.player = player;
-        move.from = {r, c};
-        move.movePiece = pawn;
-        move.isPromotion = 0;
+        Position to = {r + dr, c};
 
         // capture
         for (int dc : {-1, 1}) {
-            Position to = {r + dr, c + dc};
-            if (!isInBoard(to)) continue;
+            Position toCapture = {r + dr, c + dc};
+            if (!isInBoard(toCapture)) continue;
+            if (board.at(toCapture) == Piece::EMPTY) continue;
+            if (isSameColor(board.at(toCapture), pawn)) continue;
 
-            Piece atPiece = board.at(to);
-            if (atPiece == Piece::EMPTY) continue;
-            if (isSameColor(atPiece, pawn)) continue;
-
-            move.to = to;
-            move.capturePiece = atPiece;
-            if (to.row == promoteRank) {
+            if (toCapture.row == promoteRank) {
                 for (auto promo : {knight, bishop, rook, queen}) {
-                    move.isPromotion = 1;
-                    move.promotionPiece = promo;
-                    buffer[cnt++] = move;
+                    buffer[cnt++] = makeBitMove(
+                        positionToSquare(from),
+                        positionToSquare(toCapture),
+                        promo,
+                        true,
+                        false,
+                        false,
+                        true
+                    );
                 }
-                move.isPromotion = 0;
             } else {
-                buffer[cnt++] = move;
+                buffer[cnt++] = makeBitMove(
+                    positionToSquare(from),
+                    positionToSquare(toCapture),
+                    Piece::EMPTY,
+                    true,
+                    false,
+                    false,
+                    false
+                );
             }
         }
     }
@@ -256,9 +290,9 @@ int generateCaptureMoves(
 int filterLegalMoves(
     const Board &board,
     const Player player,
-    Move *allMoves,
+    BitMove *allMoves,
     int nAllMoves,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
 
@@ -268,20 +302,23 @@ int filterLegalMoves(
     ENGINE_ASSERT(validatePiecePos(board));
 
     for (int i = 0; i < nAllMoves; i++) {
-        Move &move = allMoves[i];
+        BitMove &move = allMoves[i];
         //if (!isMoveLegal(board, move)) continue; 已經是正確的
 
-        if (move.castle == SHORT_CASTLE || move.castle == LONG_CASTLE) {
-            if (!isCastleLegal(board, move)) continue;
+        if (getCastle(move)) {
+            // WARN 目前castle 全部停擺
+            // if (!isCastleLegal(board, move)) continue;
         }
 
-        makeMove(copyBoard, move);
+        Move transed = bitMovetoOriMove(copyBoard, move);
+
+        makeMove(copyBoard, transed);
 
         if (!isInCheck(copyBoard, player)) {
             buffer[cnt++] = move;
         }
 
-        undoMove(copyBoard, move);
+        undoMove(copyBoard, transed);
     }
 
     return cnt;
@@ -290,13 +327,13 @@ int filterLegalMoves(
 int generateAllLegalMoves(
     const Board &board,
     const Player player,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
 
     //std::cout << "generate board:\n" << board << '\n';
 
-    Move allMoves[2000];
+    BitMove allMoves[2000];
     int nAll = generateAllMoves(board, player, allMoves);
 
     int nLegalMoves = filterLegalMoves(board, player, allMoves, nAll, buffer);
@@ -307,11 +344,11 @@ int generateAllLegalMoves(
 int generateLegalCaptureMoves(
     const Board &board,
     const Player player,
-    Move *buffer
+    BitMove *buffer
 ) {
     ENGINE_ASSERT(isPlayerValid(player));
     
-    Move captureMoves[2000];
+    BitMove captureMoves[2000];
     int ncaptureMoves = generateCaptureMoves(board, player, captureMoves);
 
     int nLegalMoves = filterLegalMoves(board, player, captureMoves, ncaptureMoves, buffer);
