@@ -55,8 +55,14 @@ inline std::ostream& operator<<(std::ostream& os, const Move& move)
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const Player player)
-{
+inline std::ostream& operator<<(std::ostream& os, const BitMove& move) {
+    Position from = squareToPosition(getFromSquare(move));
+    Position to = squareToPosition(getToSquare(move));
+    os << positionToPgn(from) << positionToPgn(to);
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const Player player) {
     return os << playerToIndex(player);
 }
 

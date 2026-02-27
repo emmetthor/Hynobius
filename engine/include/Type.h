@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 enum class Player
 {
@@ -12,3 +13,6 @@ enum class EVALUATE_MODE
     POSITION,
     FULL
 };
+
+using Square = uint8_t;
+using BitMove = uint32_t;

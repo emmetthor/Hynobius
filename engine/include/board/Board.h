@@ -17,9 +17,17 @@ struct Position
     }
 };
 
+// 
+inline Position squareToPosition(Square square) {
+    return {square / 8, square % 8};
+}
+
+inline bool isValidSquare(Square square) {
+    return (0 <= square && square < 64 ? true : false);
+}
+
 // Check whether a position is inside board. (8 x 8)
-inline bool isInBoard(Position pos)
-{
+inline bool isInBoard(Position pos) {
     return 0 <= pos.row && pos.row < 8 && 0 <= pos.col && pos.col < 8;
 }
 
