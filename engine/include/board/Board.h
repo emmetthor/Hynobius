@@ -17,10 +17,16 @@ struct Position
     }
 };
 
-//
+// WARN temporary transfrom fuction
 inline Position squareToPosition(Square square)
 {
     return {square / 8, square % 8};
+}
+
+// WARN temporary transfrom fuction
+inline Square positionToSquare(Position pos)
+{
+    return static_cast<Square>(pos.row * 8 + pos.col);
 }
 
 inline bool isValidSquare(Square square)
