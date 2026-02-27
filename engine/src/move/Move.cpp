@@ -409,10 +409,6 @@ CastleMove getCastleMove(Move &move) {
     return res;
 }
 
-void printMove(const Move &move) {
-    return;
-}
-
 // 通用檢查走子
 bool isMoveLegal(const Board &board, const Move &move) {
     // 檢查入堡
