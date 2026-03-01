@@ -41,7 +41,6 @@ void testAllPerft(int depth, int testCount) {
         auto res = testPerft(fenList[i], doDepth);
         for (int j = 1; j <= doDepth; j++) {
             totalTestCases++;
-            std::cerr << res[j] << ' ' << result[i][j] << '\n';
             if (res[j] != result[i][j]) {
                 if (enPassantDiff[i][j] != 0 && res[j] + enPassantDiff[i][j] == result[i][j]) {
                     expected++;
