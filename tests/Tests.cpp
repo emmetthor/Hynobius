@@ -3,5 +3,5 @@
 
 int main() {
     std::cout << "========== Perft ==========\n";
-    testAllPerft(6);
+    testAllPerft(6, 1);
 }
