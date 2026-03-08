@@ -12,7 +12,7 @@ std::vector<int> testPerft(std::string fen, int depth) {
     std::vector<int> res(depth + 1);
 
     for (int d = 1; d <= depth; d++) {
-        int nodes = perft(board, d, Player::WHITE);
+        int nodes = perft(board, d);
         res[d] = nodes;
     }
     return res;
