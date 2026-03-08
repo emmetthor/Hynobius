@@ -14,6 +14,6 @@ void testBoardConsistency(int depth, int testCount) {
 
     for (int i = 0; i < testCount; i++) {
         Board board = cinFenToBoard(fenList[i]);
-        std::cout << "test " << i + 1 << " success with " << boardConsistency(board, depth, Player::WHITE) << " nodes.\n";
+        std::cout << "test " << i + 1 << " success with " << boardConsistency(board, depth) << " nodes.\n";
     }
 }
