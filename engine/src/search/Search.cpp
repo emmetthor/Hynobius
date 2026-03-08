@@ -62,7 +62,6 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
                 d,
                 -INF,
                 INF,
-                board.player,
                 finalRes.bestMove,
                 0
             );
@@ -81,7 +80,6 @@ SearchResult Search::findBestMove(const Board &board, int depth) {
                     d,
                     alpha,
                     beta,
-                    board.player,
                     finalRes.bestMove,
                     0
                 );
@@ -127,7 +125,6 @@ SearchResult Search::searchRootCore(
     int depth,
     int alpha,
     int beta,
-    Player player,
     Move iterativeMove,
     int ply
 ) {
@@ -147,10 +144,6 @@ SearchResult Search::searchRootCore(
 
         moveStk[backIterator++] = move;
 
-        if (player != board.player) {
-            ENGINE_FATAL(DebugCategory::SEARCH, "incorrect player");
-        }
-
         // 遞迴下一層
         makeMove(board, move);
         
@@ -159,7 +152,6 @@ SearchResult Search::searchRootCore(
             depth - 1,
             -beta,
             -alpha,
-            opponent(player),
             ply + 1
         );
 
@@ -183,7 +175,6 @@ int Search::negamax(
     int depth,
     int alpha,
     int beta,
-    Player player,
     int ply
 ) {
     negamaxNodes++;
@@ -210,7 +201,6 @@ int Search::negamax(
             board,
             alpha,
             beta,
-            player,
             ply
         );
     }
@@ -224,7 +214,7 @@ int Search::negamax(
     if (nMoves == 0) {
         // LOG_DEBUG(DebugCategory::SEARCH, "no move!");
         // std::cout << "checkmate\n" << board << '\n';
-        if (isInCheck(board, player)) return -MATE_SCORE + ply;
+        if (isInCheck(board, board.player)) return -MATE_SCORE + ply;
         else return 0;
     }
 
@@ -249,10 +239,6 @@ int Search::negamax(
 
         int score = 0;
 
-        if (player != board.player) {
-            ENGINE_FATAL(DebugCategory::SEARCH, "incorrect player");
-        }
-
         makeMove(board, move);
 
         // score = -negamax(
@@ -271,7 +257,6 @@ int Search::negamax(
                 depth - 1,
                 -beta,
                 -alpha,
-                opponent(player),
                 ply + 1
             );
         } else {
@@ -280,7 +265,6 @@ int Search::negamax(
                 searchDepth,
                 -alpha - 1,
                 -alpha,
-                opponent(player),
                 ply + 1
             );
             if (score > alpha) {
@@ -289,7 +273,6 @@ int Search::negamax(
                     depth - 1,
                     -beta,
                     -alpha,
-                    opponent(player),
                     ply + 1
                 );
             }
@@ -328,11 +311,10 @@ int Search::quietscence(
     Board &board,
     int alpha,
     int beta,
-    Player player,
     int ply
 ) {
     qsNodes++;
-    int standerdPoint = (player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
+    int standerdPoint = (board.player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
     if (standerdPoint >= beta) return standerdPoint;
     if (standerdPoint > alpha) alpha = standerdPoint;
 
@@ -363,7 +345,6 @@ int Search::quietscence(
             board,
             -beta,
             -alpha,
-            opponent(player),
             ply + 1
         );
 

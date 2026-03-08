@@ -31,7 +31,6 @@ private:
         Board &board,
         int alpha,
         int beta,
-        Player player,
         int ply
     );
 
@@ -40,7 +39,6 @@ private:
         int depth,
         int alpha,
         int beta,
-        Player player,
         int ply
     );
 
@@ -49,7 +47,6 @@ private:
         int depth,
         int alpha,
         int beta,
-        Player player,
         Move iterativeMove,
         int ply
     );
