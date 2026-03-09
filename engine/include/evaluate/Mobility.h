@@ -1,5 +1,6 @@
 # pragma once
 
+#include "Type.h"
 #include "board/Board.h"
 
 int evaluateKnightMobility (

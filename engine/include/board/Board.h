@@ -1,10 +1,6 @@
 #pragma once
 
-// WARN player 放這裡怪怪的，之後要將這些 enum class 整合在一起
-enum class Player {
-    WHITE, BLACK
-};
-
+#include "Type.h"
 #include "Piece.h"
 
 #include <string>

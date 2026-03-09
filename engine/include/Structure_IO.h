@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <ostream>
+#include "Type.h"
 #include "board/Board.h"
 #include "board/Piece.h"
 #include "move/Move.h"
