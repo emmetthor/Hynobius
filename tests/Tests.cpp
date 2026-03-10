@@ -4,7 +4,7 @@
 
 int main() {
     std::cout << "========== Perft ==========\n";
-    testAllPerft(6, 1);
+    testAllPerft(6, 3);
     std::cout << "========== Board Consistency ==========\n";
     testBoardConsistency(3, 2);
 }
