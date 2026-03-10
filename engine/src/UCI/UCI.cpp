@@ -77,7 +77,6 @@ void handlePosition(std::istringstream &iss, Engine &engine) {
         while (iss >> strMove) {
             Move move = parseUCIMove(strMove, engine.getBoard());
             engine.move(move);
-            engine.changePlayer();
         }
     }
 }
