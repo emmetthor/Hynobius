@@ -304,8 +304,7 @@ int filterLegalMoves(
         //if (!isMoveLegal(board, move)) continue; 已經是正確的
 
         if (getCastle(move)) {
-            // WARN 目前castle 全部停擺
-            // if (!isCastleLegal(board, move)) continue;
+            if (!isCastleLegal(board, move)) continue;
         }
 
         Move transed = bitMovetoOriMove(copyBoard, move);

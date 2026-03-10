@@ -363,6 +363,75 @@ bool isCastleLegal(const Board &board, const Move &move) {
     return false;
 }
 
+bool isCastleLegal(const Board &board, const BitMove move) {
+    Player player = (isWhite(board.at(squareToPosition(getFromSquare(move)))) ? Player::WHITE : Player::BLACK);
+    ENGINE_ASSERT(isPlayerValid(player));
+
+    if (getFromSquare(move) == positionToSquare({7, 4}) && getToSquare(move) == positionToSquare({7, 6})) {
+        if (
+            board.at({7, 4}) == Piece::WKING &&
+            board.at({7, 6}) == Piece::EMPTY &&
+            board.at({7, 7}) == Piece::WROOK &&
+            board.at({7, 5}) == Piece::EMPTY &&
+            isSquareAttacked(board, {7, 4}, opponent(player)) == false &&
+            isSquareAttacked(board, {7, 6}, opponent(player)) == false &&
+            isSquareAttacked(board, {7, 5}, opponent(player)) == false &&
+            (board.castleRights & 0b1000)
+        ) {
+            return true;
+        }
+    } 
+    
+    if (getFromSquare(move) == positionToSquare({7, 4}) && getToSquare(move) == positionToSquare({7, 2})) {
+        if (
+            board.at({7, 4}) == Piece::WKING &&
+            board.at({7, 2}) == Piece::EMPTY &&
+            board.at({7, 0}) == Piece::WROOK &&
+            board.at({7, 3}) == Piece::EMPTY &&
+            board.at({7, 1}) == Piece::EMPTY &&
+            isSquareAttacked(board, {7, 4}, opponent(player)) == false &&
+            isSquareAttacked(board, {7, 2}, opponent(player)) == false &&
+            isSquareAttacked(board, {7, 3}, opponent(player)) == false &&
+            (board.castleRights & 0b0100)
+        ) {
+            return true;
+        }
+    }
+
+    if (getFromSquare(move) == positionToSquare({0, 4}) && getToSquare(move) == positionToSquare({0, 6})) {
+        if (
+            board.at({0, 4}) == Piece::BKING &&
+            board.at({0, 6}) == Piece::EMPTY &&
+            board.at({0, 7}) == Piece::BROOK &&
+            board.at({0, 5}) == Piece::EMPTY &&
+            isSquareAttacked(board, {0, 4}, opponent(player)) == false &&
+            isSquareAttacked(board, {0, 6}, opponent(player)) == false &&
+            isSquareAttacked(board, {0, 5}, opponent(player)) == false &&
+            (board.castleRights & 0b0010)
+        ) {
+            return true;
+        }
+    }
+    
+    if (getFromSquare(move) == positionToSquare({0, 4}) && getToSquare(move) == positionToSquare({0, 2})) {
+        if (
+            board.at({0, 4}) == Piece::BKING &&
+            board.at({0, 2}) == Piece::EMPTY &&
+            board.at({0, 0}) == Piece::BROOK &&
+            board.at({0, 3}) == Piece::EMPTY &&
+            board.at({0, 1}) == Piece::EMPTY &&
+            isSquareAttacked(board, {0, 4}, opponent(player)) == false &&
+            isSquareAttacked(board, {0, 2}, opponent(player)) == false &&
+            isSquareAttacked(board, {0, 3}, opponent(player)) == false &&
+            (board.castleRights & 0b0001)
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool isPromoteLegal(const Board &board, const Move &move) {
     if (!isPawnMoveLegal(board, move)) return false;
 

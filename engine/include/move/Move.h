@@ -144,6 +144,8 @@ bool isMoveLegal(const Board &board, const Move &move);
 
 bool isCastleLegal(const Board &board, const Move &move);
 
+bool isCastleLegal(const Board &board, const BitMove move);
+
 CastleMove getCastleMove(Move &move);
 
 inline Move bitMovetoOriMove(const Board &board, const BitMove &move) {
