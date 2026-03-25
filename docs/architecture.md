@@ -28,3 +28,17 @@ Contains:
 Contains:
 - check a square is either attacked or not.
 - count attacks in a square.
+
+### Evaluate
+
+Contains:
+- class `Evaluate` to evaluate the current board.
+- castle rights evaluation.
+- center control evaluation.
+- king safety evaluation.
+- material points.
+- mobility.
+- pawn structure evaluation.
+- PST.
+- SEE.
+- tempo.
