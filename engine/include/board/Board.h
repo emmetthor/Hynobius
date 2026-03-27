@@ -101,10 +101,10 @@ struct Board {
     
     /*
     Store castling rights using bits.
-    - 0001 黑方 queen side
-    - 0010 黑方 king  side
-    - 0100 白方 queen side
-    - 1000 白方 king  side
+    - 0001 black queen side
+    - 0010 black king  side
+    - 0100 white queen side
+    - 1000 white king  side
     */
     int castleRights;
 
