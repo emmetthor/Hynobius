@@ -237,13 +237,17 @@ enum class DebugCategory
 
 class Debug
 {
-  public:
+public:
     static DebugLevel level;
     static uint32_t categoryMask;
 
     template <typename... Args>
-    static void logStream(DebugCategory cat, DebugLevel lvl, const char* file, int line,
-                          const char* func, Args&&... args)
+    static void logStream(DebugCategory cat,
+                          DebugLevel lvl,
+                          const char* file,
+                          int line,
+                          const char* func,
+                          Args&&... args)
     {
         if (lvl < level)
             return;
@@ -261,8 +265,8 @@ class Debug
     }
 
     template <typename... Args>
-    [[noreturn]] static void fatal(DebugCategory cat, const char* file, int line, const char* func,
-                                   Args&&... args)
+    [[noreturn]] static void
+    fatal(DebugCategory cat, const char* file, int line, const char* func, Args&&... args)
     {
         std::ostringstream oss;
         oss << "[" << std::left << std::setw(7) << categoryToStr(cat) << "][" << std::setw(20)
@@ -275,7 +279,7 @@ class Debug
         std::abort();
     }
 
-  private:
+private:
     static const char* levelToStr(DebugLevel lvl);
     static const char* categoryToStr(DebugCategory cat);
 };

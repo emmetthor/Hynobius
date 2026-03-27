@@ -44,7 +44,9 @@ int isolatePawn(const Board& board, Player player, const int isolatedPawnWeight)
     return -cnt * isolatedPawnWeight;
 }
 
-int passedPawn(const Board& board, Player player, const int passPawnWeight,
+int passedPawn(const Board& board,
+               Player player,
+               const int passPawnWeight,
                const int* passPawnRankWeight)
 {
     int index = playerToIndex(player);
@@ -81,8 +83,10 @@ int passedPawn(const Board& board, Player player, const int passPawnWeight,
     return res;
 }
 
-int evaluatePawnStructure(const Board& board, const int doublePawnWeight,
-                          const int isolatedPawnWeight, const int passedPawnWeight,
+int evaluatePawnStructure(const Board& board,
+                          const int doublePawnWeight,
+                          const int isolatedPawnWeight,
+                          const int passedPawnWeight,
                           const int* passedPawnRankWeight)
 {
     Piece wp = makePiece(Player::WHITE, 'P');

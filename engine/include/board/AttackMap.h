@@ -2,10 +2,10 @@
 
 class AttackMap
 {
-  private:
+private:
     int attackMap[2][8][8];
 
-  public:
+public:
     void clear();
     void calculate(const Board& board);
     bool isSquareAttacked(Position pos, const Player player);

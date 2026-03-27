@@ -24,8 +24,8 @@ enum class Piece
 };
 
 // Turn `Piece` into char.
-inline constexpr char PIECE_TO_CHAR[]{'.', 'P', 'N', 'B', 'R', 'Q', 'K',
-                                      'p', 'n', 'b', 'r', 'q', 'k'};
+inline constexpr char PIECE_TO_CHAR[]{
+    '.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'};
 
 // Turn [`Player`][`charToPieceIndex`] into `Piece`.
 inline constexpr Piece MAKE_PIECE_MAP[2][6]{
@@ -38,20 +38,20 @@ inline int charToPieceIndex(char c)
 {
     switch (std::toupper(c))
     {
-    case 'P':
-        return 0;
-    case 'N':
-        return 1;
-    case 'B':
-        return 2;
-    case 'R':
-        return 3;
-    case 'Q':
-        return 4;
-    case 'K':
-        return 5;
-    default:
-        ENGINE_FATAL(DebugCategory::PIECE, "invalid input: ", c);
+        case 'P':
+            return 0;
+        case 'N':
+            return 1;
+        case 'B':
+            return 2;
+        case 'R':
+            return 3;
+        case 'Q':
+            return 4;
+        case 'K':
+            return 5;
+        default:
+            ENGINE_FATAL(DebugCategory::PIECE, "invalid input: ", c);
     }
 }
 

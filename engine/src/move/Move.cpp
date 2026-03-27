@@ -536,32 +536,32 @@ bool isMoveLegal(const Board& board, const Move& move)
 
     switch (move.movePiece)
     {
-    case Piece::WPAWN:
-    case Piece::BPAWN:
-        return isPawnMoveLegal(board, move);
+        case Piece::WPAWN:
+        case Piece::BPAWN:
+            return isPawnMoveLegal(board, move);
 
-    case Piece::WKNIGHT:
-    case Piece::BKNIGHT:
-        return isKnightMoveLegal(board, move);
+        case Piece::WKNIGHT:
+        case Piece::BKNIGHT:
+            return isKnightMoveLegal(board, move);
 
-    case Piece::WBISHOP:
-    case Piece::BBISHOP:
-        return isBishopMoveLegal(board, move);
+        case Piece::WBISHOP:
+        case Piece::BBISHOP:
+            return isBishopMoveLegal(board, move);
 
-    case Piece::WROOK:
-    case Piece::BROOK:
-        return isRookMoveLegal(board, move);
+        case Piece::WROOK:
+        case Piece::BROOK:
+            return isRookMoveLegal(board, move);
 
-    case Piece::WQUEEN:
-    case Piece::BQUEEN:
-        return isQueenMoveLegal(board, move);
+        case Piece::WQUEEN:
+        case Piece::BQUEEN:
+            return isQueenMoveLegal(board, move);
 
-    case Piece::WKING:
-    case Piece::BKING:
-        return isKingMoveLegal(board, move);
+        case Piece::WKING:
+        case Piece::BKING:
+            return isKingMoveLegal(board, move);
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return true;

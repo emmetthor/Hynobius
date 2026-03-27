@@ -24,7 +24,11 @@ std::map<std::string, Header> headerTypeMap = {
     {"[White", WHITE}, {"[Black", BLACK}, {"[WhiteElo", WHITEELO}, {"[BlackElo", BLACKELO}};
 
 std::map<char, bool> specialPiece = {
-    {'K', 1}, {'Q', 1}, {'N', 1}, {'B', 1}, {'R', 1},
+    {'K', 1},
+    {'Q', 1},
+    {'N', 1},
+    {'B', 1},
+    {'R', 1},
 };
 
 std::string sanClearer(std::string strSan)
@@ -74,21 +78,21 @@ void PGN::cinPgnToSan()
 
             switch (headerType)
             {
-            case WHITE:
-                whiteName = input.substr(1, sz - 3);
-                break;
-            case BLACK:
-                blackName = input.substr(1, sz - 3);
-                break;
-            case WHITEELO:
-                whiteElo = input.substr(1, sz - 3);
-                break;
-            case BLACKELO:
-                blackElo = input.substr(1, sz - 3);
-                break;
+                case WHITE:
+                    whiteName = input.substr(1, sz - 3);
+                    break;
+                case BLACK:
+                    blackName = input.substr(1, sz - 3);
+                    break;
+                case WHITEELO:
+                    whiteElo = input.substr(1, sz - 3);
+                    break;
+                case BLACKELO:
+                    blackElo = input.substr(1, sz - 3);
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
 
             if (input.back() == ']')

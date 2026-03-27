@@ -7,7 +7,7 @@
 
 class Engine
 {
-  public:
+public:
     Engine();
 
     Evaluate eval;
@@ -24,6 +24,6 @@ class Engine
     void changePlayer();
     void setPlayer(Player player);
 
-  private:
+private:
     Board board;
 };

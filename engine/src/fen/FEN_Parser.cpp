@@ -52,23 +52,23 @@ Board cinFenToBoard(const std::string& fen)
     {
         switch (c)
         {
-        case 'K':
-            board.castleRights |= 0b1000;
-            break;
-        case 'Q':
-            board.castleRights |= 0b0100;
-            break;
-        case 'k':
-            board.castleRights |= 0b0010;
-            break;
-        case 'q':
-            board.castleRights |= 0b0001;
-            break;
-        case '-':
-            break;
-        default:
-            ENGINE_FATAL(DebugCategory::BOARD, "FEN castling is incomplete.", c);
-            break;
+            case 'K':
+                board.castleRights |= 0b1000;
+                break;
+            case 'Q':
+                board.castleRights |= 0b0100;
+                break;
+            case 'k':
+                board.castleRights |= 0b0010;
+                break;
+            case 'q':
+                board.castleRights |= 0b0001;
+                break;
+            case '-':
+                break;
+            default:
+                ENGINE_FATAL(DebugCategory::BOARD, "FEN castling is incomplete.", c);
+                break;
         }
     }
 

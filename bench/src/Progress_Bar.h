@@ -8,7 +8,7 @@ using cc = std::chrono::steady_clock;
 
 class progressBar
 {
-  public:
+public:
     progressBar(int _total, int _updateSecound = 1) : total(_total), updateSecond(_updateSecound)
     {
         lst = cc::now();
@@ -43,7 +43,7 @@ class progressBar
         std::cout << '\n';
     }
 
-  private:
+private:
     int total, updateSecond;
     int lstShow = 0;
     cc::time_point start;

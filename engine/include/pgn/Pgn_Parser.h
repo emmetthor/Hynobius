@@ -8,14 +8,14 @@
 
 class PGN
 {
-  public:
+public:
     void cinPgnToSan();
     void SantoMove();
     std::vector<Move> getMoves();
     int getMovesCount();
     Move SantoMoveSingle(Board& board, std::string strSan, Player player);
 
-  private:
+private:
     std::string whiteName, blackName, result, whiteElo, blackElo;
 
     std::vector<std::string> san_moves;

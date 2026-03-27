@@ -6,7 +6,13 @@
 
 TTEntry TT[TT_SIZE];
 
-bool probeTT(uint64_t key, int depth, int alpha, int beta, int ply, TTEntry& TTOut, int& scoreOut,
+bool probeTT(uint64_t key,
+             int depth,
+             int alpha,
+             int beta,
+             int ply,
+             TTEntry& TTOut,
+             int& scoreOut,
              Move& moveOut)
 {
     TTEntry& tt = TT[TTIndex(key)];

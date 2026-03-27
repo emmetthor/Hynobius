@@ -51,7 +51,8 @@ void sortMove(const Board& board, Move* moves, int nMoves, advanceMoves& advMove
         tmp[i].score = evaluateMoveScore(board, moves[i], advMove);
     }
 
-    std::sort(tmp, tmp + nMoves,
+    std::sort(tmp,
+              tmp + nMoves,
               [](const ScoreMove& a, const ScoreMove& b) { return a.score > b.score; });
 
     for (int i = 0; i < nMoves; i++)

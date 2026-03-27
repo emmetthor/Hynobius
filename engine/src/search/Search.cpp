@@ -117,8 +117,8 @@ SearchResult Search::findBestMove(const Board& board, int depth)
     return finalRes;
 }
 
-SearchResult Search::searchRootCore(Board& board, int depth, int alpha, int beta,
-                                    Move iterativeMove, int ply)
+SearchResult
+Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterativeMove, int ply)
 {
     SearchResult res;
     res.bestScore = -INF;

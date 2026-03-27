@@ -6,7 +6,7 @@
 
 class Evaluate
 {
-  public:
+public:
     int evaluateBoard(const Board& board, EVALUATE_MODE m) const;
     Evaluate_Weights evalWeight;
 };

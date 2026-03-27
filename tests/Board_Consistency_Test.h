@@ -1,6 +1,6 @@
 #pragma once
-#include "fen/FEN_Parser.h"
 #include "../engine/include/search/Board_Consistency.h"
+#include "fen/FEN_Parser.h"
 
 #include <iostream>
 #include <string>

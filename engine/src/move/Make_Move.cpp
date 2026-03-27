@@ -222,8 +222,8 @@ void makeMove(Board& board, Move& move)
         int moveIndex = pieceToIndex(moved);
         int promotionIndex = pieceToIndex(move.promotionPiece);
         board.piecePosDelete(board.piecePos[moveIndex], board.pieceCount[moveIndex], move.from);
-        board.piecePosAdd(board.piecePos[promotionIndex], board.pieceCount[promotionIndex],
-                          move.to);
+        board.piecePosAdd(
+            board.piecePos[promotionIndex], board.pieceCount[promotionIndex], move.to);
     }
 
     else
@@ -281,8 +281,8 @@ void undoMove(Board& board, Move& move)
     {
         int moveIndex = pieceToIndex(moved);
         int promotionIndex = pieceToIndex(move.promotionPiece);
-        board.piecePosDelete(board.piecePos[promotionIndex], board.pieceCount[promotionIndex],
-                             move.to);
+        board.piecePosDelete(
+            board.piecePos[promotionIndex], board.pieceCount[promotionIndex], move.to);
         board.piecePosAdd(board.piecePos[moveIndex], board.pieceCount[moveIndex], move.from);
     }
 

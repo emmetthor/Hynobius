@@ -24,19 +24,19 @@ struct SearchResult
 
 class Search
 {
-  public:
+public:
     Search(Evaluate& _eval);
     SearchResult findBestMove(const Board& board, int depth);
 
-  private:
+private:
     Evaluate eval;
 
     int quietscence(Board& board, int alpha, int beta, int ply);
 
     int negamax(Board& board, int depth, int alpha, int beta, int ply);
 
-    SearchResult searchRootCore(Board& board, int depth, int alpha, int beta, Move iterativeMove,
-                                int ply);
+    SearchResult
+    searchRootCore(Board& board, int depth, int alpha, int beta, Move iterativeMove, int ply);
 
     void printMoveStk();
 

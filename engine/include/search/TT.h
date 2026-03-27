@@ -30,7 +30,13 @@ inline int TTIndex(uint64_t key)
     return key & TT_MASK;
 }
 
-bool probeTT(uint64_t key, int depth, int alpha, int beta, int ply, TTEntry& TTOut, int& scoreOut,
+bool probeTT(uint64_t key,
+             int depth,
+             int alpha,
+             int beta,
+             int ply,
+             TTEntry& TTOut,
+             int& scoreOut,
              Move& moveOut);
 
 void storeTT(uint64_t key, int depth, int ply, int score, TTFlag flag, Move bestMove);

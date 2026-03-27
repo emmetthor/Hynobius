@@ -55,18 +55,18 @@ Move parseUCIMove(const std::string strMove, const Board& board)
 
         switch (promoChar)
         {
-        case 'q':
-            move.promotionPiece = makePiece(player, 'Q');
-            break;
-        case 'r':
-            move.promotionPiece = makePiece(player, 'R');
-            break;
-        case 'b':
-            move.promotionPiece = makePiece(player, 'B');
-            break;
-        case 'n':
-            move.promotionPiece = makePiece(player, 'N');
-            break;
+            case 'q':
+                move.promotionPiece = makePiece(player, 'Q');
+                break;
+            case 'r':
+                move.promotionPiece = makePiece(player, 'R');
+                break;
+            case 'b':
+                move.promotionPiece = makePiece(player, 'B');
+                break;
+            case 'n':
+                move.promotionPiece = makePiece(player, 'N');
+                break;
         }
     }
 
