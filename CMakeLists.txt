@@ -2,6 +2,7 @@
     project(chess-analysis-engine)
 
     set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
     # 告訴 CMake include 目錄在哪
     include_directories(engine/include)
