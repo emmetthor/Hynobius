@@ -35,6 +35,10 @@ int Evaluate::evaluateBoard(const Board &board, EVALUATE_MODE m) const {
             evalWeight.passPawnWeight,
             evalWeight.passPawnRankWeight);
         res += evaluateTempo(board, board.player, evalWeight.tempo);
+
+        break;
+    default:
+        res = 0;
     }
 
     return res;

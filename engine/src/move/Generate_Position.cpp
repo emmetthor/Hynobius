@@ -1,5 +1,6 @@
 #include "move/Generate_Position.h"
 #include "board/Board.h"
+#include "debug.h"
 
 // WARN 這是第二次出現，之後要與 Attack 整合
 // 棋子移動的固定 map
@@ -168,6 +169,15 @@ int generatePiecePosFromPos(
     case Piece::WKING:
     case Piece::BKING:
         return generatePosFromPosWithJumpPiece(board, pos, p, KING_DR, KING_DC, buffer);
+    
+    case Piece::WPAWN:
+    case Piece::BPAWN:
+        ENGINE_FATAL(DebugCategory::GENERATE, "pawns are not pieces.");
+
+    case Piece::EMPTY:
+        ENGINE_FATAL(DebugCategory::GENERATE, "empty is not a piece.");
+    case Piece::PIECE_COUNT:
+        ENGINE_FATAL(DebugCategory::GENERATE, "piece_count is not a piece.");
     }
 
     return 0;
@@ -204,6 +214,15 @@ int generatePieceCaptureFromPos(
     case Piece::WKING:
     case Piece::BKING:
         return generateCaptureFromPosWithJumpPiece(board, pos, p, KING_DR, KING_DC, buffer);
+    
+    case Piece::WPAWN:
+    case Piece::BPAWN:
+        ENGINE_FATAL(DebugCategory::GENERATE, "pawns are not pieces.");
+
+    case Piece::EMPTY:
+        ENGINE_FATAL(DebugCategory::GENERATE, "empty is not a piece.");
+    case Piece::PIECE_COUNT:
+        ENGINE_FATAL(DebugCategory::GENERATE, "piece_count is not a piece.");
     }
 
     return 0;
