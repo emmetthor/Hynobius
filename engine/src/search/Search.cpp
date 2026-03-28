@@ -241,7 +241,8 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
 
         if (i == 0)
         {
-            // search fully in the first move (it may be the best move while setting a range of alpha and beta for other moves.)
+            // search fully in the first move (it may be the best move while setting a range of
+            // alpha and beta for other moves.)
             score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
         }
         else

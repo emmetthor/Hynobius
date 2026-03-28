@@ -119,7 +119,8 @@
 //         san_moves.push_back(sanClearer(input));
 //     }
 
-//     // debug::log("cinPgnToSan: ", whiteName, ' ', whiteElo, ' ', blackName, ' ', blackElo, '\n');
+//     // debug::log("cinPgnToSan: ", whiteName, ' ', whiteElo, ' ', blackName, ' ', blackElo,
+//     '\n');
 // }
 
 // bool isCapture(std::string strSan)

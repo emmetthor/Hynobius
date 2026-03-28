@@ -91,12 +91,15 @@ void handlePosition(std::istringstream& iss, Engine& engine)
             fen += token;
         }
         engine.setPositionWithFen(fen);
-    } else {
+    }
+    else
+    {
         ENGINE_FATAL(DebugCategory::BOARD, "Invalid UCI position command.");
     }
 
     // no moves command
-    if (!(iss >> token)) {
+    if (!(iss >> token))
+    {
         return;
     }
 
