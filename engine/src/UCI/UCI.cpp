@@ -1,6 +1,7 @@
 #include "UCI/UCI.h"
 #include "Structure_IO.h"
 #include "UCI/UCI_Move_Parcer.h"
+#include "debug.h"
 #include "move/Move.h"
 #include "pgn/Pgn_Transformer.h"
 
@@ -79,9 +80,8 @@ void handlePosition(std::istringstream& iss, Engine& engine)
     if (token == "startpos")
     {
         engine.setStartPosition();
-        iss >> token;
     }
-    if (token == "fen")
+    else if (token == "fen")
     {
         for (int t = 0; t < 6; t++)
         {
@@ -91,12 +91,17 @@ void handlePosition(std::istringstream& iss, Engine& engine)
             fen += token;
         }
         engine.setPositionWithFen(fen);
-        iss >> token;
+    } else {
+        ENGINE_FATAL(DebugCategory::BOARD, "Invalid UCI position command.");
+    }
+
+    // no moves command
+    if (!(iss >> token)) {
+        return;
     }
 
     if (token == "moves")
     {
-        engine.setPlayer(Player::WHITE);
         std::string strMove;
         while (iss >> strMove)
         {
