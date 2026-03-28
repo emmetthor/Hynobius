@@ -35,7 +35,6 @@
         engine/src/evaluate/Pawn_Structure.cpp
 
         engine/src/pgn/Pgn_Parser.cpp
-        engine/src/pgn/Valid_Piece.cpp
         engine/src/pgn/Pgn_Transformer.cpp
 
         engine/src/search/TT.cpp
