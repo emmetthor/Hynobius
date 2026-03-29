@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../engine/include/board/Board.h"
 #include "../engine/include/fen/FEN_Parser.h"
 #include "../engine/include/search/Perft.h"
@@ -20,10 +18,9 @@ std::vector<int> testPerft(std::string fen, int depth)
     return res;
 }
 
-void testAllPerft(int depth, int testCount)
+int main()
 {
-    int doDepth = std::min(depth, 5);
-    testCount = std::min(testCount, 3);
+    int doDepth = 5;
     std::vector<std::string> fenList = {
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
         "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
@@ -37,7 +34,7 @@ void testAllPerft(int depth, int testCount)
     int failedTestCases = 0;
     int expected = 0;
 
-    for (int i = 0; i < testCount; i++)
+    for (int i = 0; i < 2; i++)
     {
         auto res = testPerft(fenList[i], std::min(doDepth, validTests[i]));
         for (int j = 1; j <= std::min(doDepth, validTests[i]); j++)
@@ -59,6 +56,6 @@ void testAllPerft(int depth, int testCount)
 
     std::cout << "success test cases: " << totalTestCases - failedTestCases - expected << '/'
               << totalTestCases << " [expected: " << expected << "]\n";
-    if (failedTestCases)
-        exit(1);
+    
+    assert(failedTestCases == 0);
 }
