@@ -48,6 +48,7 @@ Board cinFenToBoard(const std::string& fen)
 
     board.player = (player == "w" ? Player::WHITE : Player::BLACK);
 
+    board.castleRights = 0;
     for (char c : castling)
     {
         switch (c)

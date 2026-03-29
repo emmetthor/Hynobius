@@ -16,9 +16,19 @@ jobs:
         run: |
           cmake -B ${{github.workspace}}/build -S . \
           -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+
       - name: Build
         run:
           cmake --build ${{github.workspace}}/build
+
       - name: Board Consistency Test
         working-directory: ${{github.workspace}}/build
         run: ctest -R BoardConsistencyTest --verbose
+
+      - name: Perft Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -R PerftTest --verbose
+
+      - name: M1 Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -R M1Test --verbose

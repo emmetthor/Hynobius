@@ -1,7 +1,6 @@
-#include "Mate_In_One.h"
+
 #include "../../engine/include/Engine.h"
 #include "../../engine/include/UCI/UCI.h"
-#include "Bench.h"
 #include "Progress_Bar.h"
 #include <array>
 #include <fstream>
@@ -10,6 +9,7 @@
 #include <string>
 #include <vector>
 
+using TestData = std::pair<std::string, std::string>;
 std::vector<TestData> readMateInOneFile(const std::string& filename)
 {
     std::vector<TestData> res;
@@ -37,11 +37,11 @@ std::vector<TestData> readMateInOneFile(const std::string& filename)
     return res;
 }
 
-testResult testMateInOne(int testCnt)
+int main()
 {
-    auto testData = readMateInOneFile("../bench/Mate_In_One.txt");
+    auto testData = readMateInOneFile("../tests/bench/Mate_In_One.txt");
 
-    testCnt = std::min(testCnt, (int)testData.size());
+    int testCnt = 1000;
 
     int failCnt = 0;
     int expectedFail = 0;
@@ -84,5 +84,5 @@ testResult testMateInOne(int testCnt)
         std::cout << a << " ; expected: " << b << " ; result: " << c << '\n';
     }
 
-    return {testCnt, failCnt, expectedFail};
+    assert(failed.size() == 0);
 }
