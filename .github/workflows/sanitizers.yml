@@ -1,12 +1,7 @@
 name: Sanitizers
 
 on:
-  push:
-    branches-ignore:
-      - main
-    # for testing. it will change to branches [main] if success
-  pull_request:
-    branches: [main]
+  workflow_call:
 
 jobs:
   sanitizers:

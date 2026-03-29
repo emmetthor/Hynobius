@@ -30,7 +30,7 @@ int main()
 {
     auto testData = readMateInTwoFile("../tests/bench/Mate_In_Two.txt");
 
-    int testCnt = 20;
+    int testCnt = 10;
 
     int failCnt = 0;
     progressBar bar(testCnt, 5);

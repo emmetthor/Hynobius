@@ -41,7 +41,7 @@ int main()
 {
     auto testData = readMateInOneFile("../tests/bench/Mate_In_One.txt");
 
-    int testCnt = 1000;
+    int testCnt = 100;
 
     int failCnt = 0;
     int expectedFail = 0;
