@@ -32,3 +32,7 @@ jobs:
       - name: M1 Test
         working-directory: ${{github.workspace}}/build
         run: ctest -R M1Test --verbose
+
+      - name: M2 Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -R M2Test --verbose

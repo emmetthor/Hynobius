@@ -1,6 +1,4 @@
-#include "Mate_In_Two.h"
 #include "../../engine/include/Engine.h"
-#include "Bench.h"
 #include "Progress_Bar.h"
 
 #include <fstream>
@@ -28,11 +26,11 @@ std::vector<std::string> readMateInTwoFile(const std::string& filename)
     return res;
 }
 
-testResult testMateInTwo(int testCnt)
+int main()
 {
-    auto testData = readMateInTwoFile("../bench/Mate_In_Two.txt");
+    auto testData = readMateInTwoFile("../tests/bench/Mate_In_Two.txt");
 
-    testCnt = std::min(testCnt, (int)testData.size());
+    int testCnt = 20;
 
     int failCnt = 0;
     progressBar bar(testCnt, 5);
@@ -65,5 +63,5 @@ testResult testMateInTwo(int testCnt)
         std::cout << s << '\n';
     }
 
-    return {testCnt, failCnt, 0};
+    assert(failCnt == 0);
 }
