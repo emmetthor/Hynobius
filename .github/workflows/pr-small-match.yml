@@ -45,7 +45,7 @@ jobs:
       - name: Build baseline
         shell: pwsh
         run: |
-          cmake -S baseline/ -B baseline/build -G "Ninja" -DCMAKE_BUILD_TYPE=Release
+          cmake -S baseline/engine -B baseline/build -G "Ninja" -DCMAKE_BUILD_TYPE=Release
           cmake --build baseline/build --config Release
 
       - name: Prepare output folders
