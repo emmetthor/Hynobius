@@ -39,13 +39,13 @@ jobs:
       - name: Build candidate
         shell: pwsh
         run: |
-          cmake -S candidate/ -B candidate/build -DCMAKE_BUILD_TYPE=Release
+          cmake -S candidate/ -B candidate/build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build candidate/build --config Release
 
       - name: Build baseline
         shell: pwsh
         run: |
-          cmake -S baseline/ -B baseline/build -DCMAKE_BUILD_TYPE=Release
+          cmake -S baseline/ -B baseline/build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build baseline/build --config Release
 
       - name: Prepare output folders
