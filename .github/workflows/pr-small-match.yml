@@ -100,7 +100,7 @@ jobs:
         run: |
           Add-Content $env:GITHUB_STEP_SUMMARY "## PR Small Match"
           Add-Content $env:GITHUB_STEP_SUMMARY ""
-          Add-Content $env:GITHUB_STEP_SUMMARY "- Baseline ref: `v0.1`"
+          Add-Content $env:GITHUB_STEP_SUMMARY "- Baseline ref: `v0.1-baseline`"
           Add-Content $env:GITHUB_STEP_SUMMARY "- Candidate SHA: `${{ github.sha }}`"
           Add-Content $env:GITHUB_STEP_SUMMARY "- Depth: `4`"
           Add-Content $env:GITHUB_STEP_SUMMARY "- Opening pairs: `10`"
