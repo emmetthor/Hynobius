@@ -85,7 +85,7 @@ jobs:
             -engine name=baseline cmd="$env:BASELINE_EXE" `
             -engine name=candidate cmd="$env:CANDIDATE_EXE" `
             -each proto=uci tc=60+0.1 depth=4 `
-            -openings file=./candidate/bench/openings_small.pgn format=pgn order=random `
+            -openings file=D:\Cute_Chess\pgn\openings.pgn format=pgn order=random `
             -rounds 2 `
             -games 2 `
             -repeat `
