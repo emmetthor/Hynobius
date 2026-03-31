@@ -29,63 +29,72 @@ constexpr BitMove CASTLE_MASK = 1u << 17;
 constexpr BitMove EN_PASSENT_MASK = 1u << 18;
 constexpr BitMove PROMOTION_MASK = 1u << 19;
 
-inline Square getFromSquare(const BitMove move) {
+inline Square getFromSquare(const BitMove move)
+{
     Square res = static_cast<Square>(move & FROM_MASK);
 
-    if (isValidSquare(res)) {
+    if (isValidSquare(res))
+    {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid from square: ", res);
     }
 
     return res;
 }
 
-inline Square getToSquare(const BitMove move) {
+inline Square getToSquare(const BitMove move)
+{
     Square res = static_cast<Square>(move & TO_MASK);
 
-    if (isValidSquare(res)) {
+    if (isValidSquare(res))
+    {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid to square: ", res);
     }
 
     return res;
 }
 
-inline Piece getPromotePiece(const BitMove move) {
+inline Piece getPromotePiece(const BitMove move)
+{
     int pieceIndex = static_cast<int>(move & PROMOTE_PIECE_MASK);
 
-    if (!isValidPieceIndex(pieceIndex)) {
+    if (!isValidPieceIndex(pieceIndex))
+    {
         ENGINE_FATAL(DebugCategory::MOVE, "invalid piece index: ", pieceIndex);
     }
 
     return static_cast<Piece>(pieceIndex);
 }
 
-inline bool getCapture(const BitMove move) {
+inline bool getCapture(const BitMove move)
+{
     return static_cast<bool>(move & CAPTURE_MASK);
 }
 
-inline bool getCastle(const BitMove move) {
+inline bool getCastle(const BitMove move)
+{
     return static_cast<bool>(move & CASTLE_MASK);
 }
 
-inline bool getEnPassant(const BitMove move) {
+inline bool getEnPassant(const BitMove move)
+{
     return static_cast<bool>(move & EN_PASSENT_MASK);
 }
 
-inline bool getPromotion(const BitMove move) {
+inline bool getPromotion(const BitMove move)
+{
     return static_cast<bool>(move & PROMOTION_MASK);
 }
 
-inline BitMove makeMove(
-    const Position &from,
-    const Position &to,
-    const Piece &promotePiece,
-    bool isCapture,
-    bool isCastle,
-    bool isEnPassant,
-    bool isPromotion
-) {
+inline BitMove makeMove(const Position& from,
+                        const Position& to,
+                        const Piece& promotePiece,
+                        bool isCapture,
+                        bool isCastle,
+                        bool isEnPassant,
+                        bool isPromotion)
+{
     BitMove res = 0;
-    
+
     res |= from.row;
     res |= (from.col << 3);
     res |= (to.row << 6);
@@ -99,7 +108,8 @@ inline BitMove makeMove(
     return res;
 }
 
-struct Move {
+struct Move
+{
     Player player;
 
     Position from;

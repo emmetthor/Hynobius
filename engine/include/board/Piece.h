@@ -121,6 +121,7 @@ inline bool isSameColor(Piece p1, Piece p2)
     return isWhite(p1) == isWhite(p2);
 }
 
-inline bool isValidPieceIndex(int index) {
+inline bool isValidPieceIndex(int index)
+{
     return (1 <= index && index <= 12 ? true : false);
 }
