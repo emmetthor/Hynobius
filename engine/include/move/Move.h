@@ -2,6 +2,7 @@
 
 #include "Type.h"
 #include "board/Board.h"
+#include "debug.h"
 
 enum Castle
 {
@@ -92,7 +93,21 @@ inline BitMove makeBitMove(const Square from,
                            const bool isCastle,
                            const bool isEnPassant,
                            const bool isPromotion)
-{
+{   
+    if (!isValidSquare(from))
+    {
+        ENGINE_FATAL(DebugCategory::MOVE, "invalid from square:", from);
+    }
+
+    if (!isValidSquare(to))
+    {
+        ENGINE_FATAL(DebugCategory::MOVE, "invalid to square:", to);
+    }
+    if (!(1 <= pieceToIndex(promotePiece) && pieceToIndex(promotePiece) <= 12))
+    {
+        ENGINE_FATAL(DebugCategory::MOVE, "invalid promotion piece:", pieceToIndex(promotePiece));
+    }
+    
     BitMove res = 0;
 
     res |= from;
