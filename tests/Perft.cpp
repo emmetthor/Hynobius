@@ -34,7 +34,7 @@ int main()
     int failedTestCases = 0;
     int expected = 0;
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
     {
         auto res = testPerft(fenList[i], std::min(doDepth, validTests[i]));
         for (int j = 1; j <= std::min(doDepth, validTests[i]); j++)
