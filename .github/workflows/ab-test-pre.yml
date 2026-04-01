@@ -111,8 +111,8 @@ jobs:
         run: |
           $baseline1 = "baseline/build/Release/chess-analysis-engine.exe"
           $baseline2 = "baseline/build/chess-analysis-engine.exe"
-          $candidate1 = "candidate/build/Release/Hynobius.exe"
-          $candidate2 = "candidate/build/Hynobius.exe"
+          $candidate1 = "candidate/build/Release/chess-analysis-engine.exe"
+          $candidate2 = "candidate/build/chess-analysis-engine.exe"
 
           if (Test-Path $baseline1) { $baselineExe = (Resolve-Path $baseline1).Path }
           elseif (Test-Path $baseline2) { $baselineExe = (Resolve-Path $baseline2).Path }
