@@ -4,7 +4,6 @@
 #include "board/Board.h"
 #include "evaluate/Evaluate.h"
 #include "move/Move.h"
-#include <cstdint>
 
 constexpr int MATE_SCORE = 1e6;
 
