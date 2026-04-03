@@ -1,9 +1,31 @@
-#include "../engine/include/search/Perft.h"
 #include "../engine/include/board/Board.h"
 #include "../engine/include/fen/FEN_Parser.h"
+#include "../engine/include/move/Move.h"
+#include "../engine/include/move/Generate_Move.h"
+#include "../engine/include/move/Make_Move.h"
 #include <iostream>
 #include <string>
 #include <vector>
+
+int perft(Board& board, int depth)
+{
+    if (depth <= 0)
+        return 1;
+    int nodes = 0;
+
+    Move moves[256];
+    int nMoves = generateAllLegalMoves(board, moves);
+
+    for (int i = 0; i < nMoves; i++)
+    {
+        Move move = moves[i];
+        makeMove(board, move);
+        nodes += perft(board, depth - 1);
+        undoMove(board, move);
+    }
+
+    return nodes;
+}
 
 std::vector<int> testPerft(std::string fen, int depth)
 {
@@ -40,6 +62,7 @@ int main()
         for (int j = 1; j <= std::min(doDepth, validTests[i]); j++)
         {
             totalTestCases++;
+            std::cout << "test" << i << "| result=" << res[j] << " | expect=" << result[i][j] << '\n';
             if (res[j] != result[i][j])
             {
                 if (enPassantDiff[i][j] != 0 && res[j] + enPassantDiff[i][j] == result[i][j])
