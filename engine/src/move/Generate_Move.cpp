@@ -1,4 +1,5 @@
 #include "Type.h"
+#include "move/Make_BitMove.h"
 #pragma GCC optimize("O3,unroll-loops")
 
 #include "board/Board.h"
@@ -6,7 +7,7 @@
 #include "board/Piece.h"
 #include "debug.h"
 #include "move/Generate_Position.h"
-#include "move/Make_Move.h"
+#include "move/Make_BitMove.h"
 #include "move/Move.h"
 
 int generatePieceMoves(const Board& board, Piece movePiece, BitMove* buffer)
@@ -224,21 +225,7 @@ int generatePawnCaptures(const Board& board, BitMove* buffer)
 
 int generateCastles(const Board& board, BitMove* buffer)
 {
-    // TODO
-    // // castle
-    // for (auto len : {SHORT_CASTLE, LONG_CASTLE})
-    // {
-    //     Move moveCastle;
-    //     moveCastle.castle = len;
-    //     moveCastle.player = player;
-    //     moveCastle.capturePiece = Piece::EMPTY;
-
-    //     CastleMove m = getCastleMove(moveCastle);
-    //     moveCastle.from = m.kingFrom;
-    //     moveCastle.to = m.kingTo;
-
-    //     buffer[cnt++] = moveCastle;
-    // }
+    
 }
 
 int generateAllMoves(const Board& board, BitMove* buffer)
@@ -301,25 +288,27 @@ int filterLegalMoves(const Board& board, Move* allMoves, int nAllMoves, Move* bu
 
     for (int i = 0; i < nAllMoves; i++)
     {
-        Move& move = allMoves[i];
-        // if (!isMoveLegal(board, move)) continue; 已經是正確的
+        Move oriMove = allMoves[i];
+        BitMove move = makeBitMove(
+            positionToSquare(oriMove.from),
+            positionToSquare(oriMove.to),
+            oriMove.promotionPiece,
+            (isValidPieceIndex(pieceToIndex(oriMove.capturePiece)) ? true : false),
+            false,
+            false,
+            oriMove.isEnPassant
+        );
+        // WARN castling are invalid now.
 
-        if (move.castle == SHORT_CASTLE || move.castle == LONG_CASTLE)
-        {
-            if (!isCastleLegal(board, move))
-            {
-                continue;
-            }
-        }
-
-        makeMove(copyBoard, move);
+        UndoState undo;
+        doBitMove(copyBoard, move, undo);
 
         if (!isInCheck(copyBoard, opponent(copyBoard.player)))
         {
-            buffer[cnt++] = move;
+            buffer[cnt++] = oriMove;
         }
 
-        undoMove(copyBoard, move);
+        undoBitMove(copyBoard, move, undo);
     }
 
     return cnt;

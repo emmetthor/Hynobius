@@ -4,17 +4,6 @@
 #include <board/Piece.h>
 #include <cstdint>
 
-struct UndoState
-{
-    uint8_t castleRights;
-
-    int materialScore;
-    int PSTScore;
-
-    uint64_t zobristKey;
-
-    Piece capturedPiece;
-};
 
 // intergret move infos
 // placedPiece: The piece that actually placed at Position to
@@ -45,6 +34,37 @@ struct MoveState
         {
             placedPiece = movePiece;
         }
+    }
+};
+
+struct UndoState
+{
+    Piece capturedPiece;
+    Piece movePiece;
+    Piece placedPiece;
+    Position from;
+    Position to;
+    bool isCastle;
+    bool isPromotion;
+
+    int castleRights;
+    int materialScore;
+    int PSTScore;
+    uint64_t zobristKey;
+
+    inline void make(const Board &board, const MoveState &state)
+    {
+        capturedPiece = state.capturedPiece;
+        movePiece = state.movePiece;
+        placedPiece = state.placedPiece;
+        from = state.from;
+        to = state.to;
+        isCastle = state.isCastle;
+        isPromotion = state.isPromotion;
+        castleRights = board.castleRights;
+        materialScore = board.materialScore;
+        PSTScore = board.PSTScore;
+        zobristKey = board.zobristKey;
     }
 };
 

@@ -22,6 +22,7 @@
         engine/src/move/Generate_Position.cpp
         engine/src/move/Generate_Move.cpp
         engine/src/move/Make_Move.cpp
+        engine/src/move/Make_BitMove.cpp
 
         engine/src/evaluate/Material_Point.cpp
         engine/src/evaluate/Evaluate.cpp

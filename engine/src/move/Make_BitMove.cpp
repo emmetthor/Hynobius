@@ -10,12 +10,6 @@ void doRegularMove(Board &board, const MoveState &state)
     board.set(state.to, state.placedPiece);
 }
 
-void undoRegularMove(Board &board, const MoveState &state)
-{
-    board.set(state.from, state.movePiece);
-    board.set(state.to, state.capturedPiece);
-}
-
 void doCastling(Board &board, const MoveState &state)
 {
     // move king.
@@ -51,7 +45,7 @@ void doCastling(Board &board, const MoveState &state)
     board.set(rookTo, rook);
 }
 
-void undoCastling(Board &board, const MoveState &state)
+void undoCastling(Board &board, const UndoState &state)
 {
     // move king back
     if (board.at(state.to) != state.movePiece)
@@ -98,20 +92,16 @@ void doBitMove(Board &board, const BitMove move, UndoState &undo)
     MoveState state(board, move);
 
     // save info for UndoState
-    undo.capturedPiece = state.capturedPiece;
-    undo.castleRights = board.castleRights;
-    undo.materialScore = board.materialScore;
-    undo.PSTScore = board.PSTScore;
-    undo.zobristKey = board.zobristKey;
+    undo.make(board, state);
 
     // do move
     if (state.isCastle)
     {
-        doRegularMove(board, state);
+        doCastling(board, state);
     }
     else
     {
-        doCastling(board, state);
+        doRegularMove(board, state);
     }
 
     // update material score.
@@ -132,16 +122,14 @@ void doBitMove(Board &board, const BitMove move, UndoState &undo)
 
 void undoBitMove(Board &board, const BitMove move, const UndoState &undo)
 {
-    MoveState state(board, move);
-
-    if (state.isCastle)
+    if (undo.isCastle)
     {
-        undoCastling(board, state);
+        undoCastling(board, undo);
     }
     else
     {
-        board.set(state.to, undo.capturedPiece);
-        board.set(state.from, state.movePiece);
+        board.set(undo.to, undo.capturedPiece);
+        board.set(undo.from, undo.movePiece);
     }
 
     board.castleRights = undo.castleRights;
