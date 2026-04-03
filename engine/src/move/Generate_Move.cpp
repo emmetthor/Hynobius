@@ -10,7 +10,6 @@
 #include "move/Make_BitMove.h"
 #include "move/Move.h"
 #include "board/Attack.h"
-#include "Structure_IO.h"
 
 int generatePieceMoves(const Board& board, Piece movePiece, BitMove* buffer)
 {
@@ -376,7 +375,7 @@ int generateAllMoves(const Board& board, BitMove* buffer)
 
     cnt += generatePawnQuietMoves(board, buffer + cnt);
     cnt += generatePawnCaptures(board, buffer + cnt);
-    
+
     cnt += generateCastling(board, buffer + cnt);
 
     return cnt;
