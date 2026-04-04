@@ -1,7 +1,7 @@
 #pragma GCC optimize("O3,unroll-loops")
 
 #include "Type.h"
-#include "move/Make_BitMove.h"
+#include "board/Attack.h"
 #include "board/Board.h"
 #include "board/Check.h"
 #include "board/Piece.h"
@@ -9,7 +9,6 @@
 #include "move/Generate_Position.h"
 #include "move/Make_BitMove.h"
 #include "move/Move.h"
-#include "board/Attack.h"
 
 int generatePieceMoves(const Board& board, Piece movePiece, BitMove* buffer)
 {
@@ -250,22 +249,19 @@ int generateCastling(const Board& board, BitMove* buffer)
         // white king side.
         if (board.castleRights & 0b0100)
         {
-            if (board.at(f) == Piece::EMPTY &&
-                board.at(g) == Piece::EMPTY)
+            if (board.at(f) == Piece::EMPTY && board.at(g) == Piece::EMPTY)
             {
                 if (!isSquareAttacked(board, kingPos, Player::BLACK) &&
                     !isSquareAttacked(board, f, Player::BLACK) &&
                     !isSquareAttacked(board, g, Player::BLACK))
                 {
-                    buffer[cnt++] = makeBitMove(
-                        positionToSquare(kingPos),
-                        positionToSquare(g),
-                        Piece::EMPTY,
-                        false,
-                        true,
-                        false,
-                        false
-                    );
+                    buffer[cnt++] = makeBitMove(positionToSquare(kingPos),
+                                                positionToSquare(g),
+                                                Piece::EMPTY,
+                                                false,
+                                                true,
+                                                false,
+                                                false);
                 }
             }
         }
@@ -278,22 +274,19 @@ int generateCastling(const Board& board, BitMove* buffer)
             Position f = {row, 5};
             Position g = {row, 6};
 
-            if (board.at(f) == Piece::EMPTY &&
-                board.at(g) == Piece::EMPTY)
+            if (board.at(f) == Piece::EMPTY && board.at(g) == Piece::EMPTY)
             {
                 if (!isSquareAttacked(board, kingPos, Player::WHITE) &&
                     !isSquareAttacked(board, f, Player::WHITE) &&
                     !isSquareAttacked(board, g, Player::WHITE))
                 {
-                    buffer[cnt++] = makeBitMove(
-                        positionToSquare(kingPos),
-                        positionToSquare(g),
-                        Piece::EMPTY,
-                        false,
-                        true,
-                        false,
-                        false
-                    );
+                    buffer[cnt++] = makeBitMove(positionToSquare(kingPos),
+                                                positionToSquare(g),
+                                                Piece::EMPTY,
+                                                false,
+                                                true,
+                                                false,
+                                                false);
                 }
             }
         }
@@ -306,23 +299,20 @@ int generateCastling(const Board& board, BitMove* buffer)
         if (board.castleRights & 0b1000)
         {
 
-            if (board.at(d) == Piece::EMPTY &&
-                board.at(c) == Piece::EMPTY &&
+            if (board.at(d) == Piece::EMPTY && board.at(c) == Piece::EMPTY &&
                 board.at(b) == Piece::EMPTY)
             {
                 if (!isSquareAttacked(board, kingPos, Player::BLACK) &&
                     !isSquareAttacked(board, d, Player::BLACK) &&
                     !isSquareAttacked(board, c, Player::BLACK))
                 {
-                    buffer[cnt++] = makeBitMove(
-                        positionToSquare(kingPos),
-                        positionToSquare(c),
-                        Piece::EMPTY,
-                        false,
-                        true,
-                        false,
-                        false
-                    );
+                    buffer[cnt++] = makeBitMove(positionToSquare(kingPos),
+                                                positionToSquare(c),
+                                                Piece::EMPTY,
+                                                false,
+                                                true,
+                                                false,
+                                                false);
                 }
             }
         }
@@ -332,23 +322,20 @@ int generateCastling(const Board& board, BitMove* buffer)
         // black queen side.
         if (board.castleRights & 0b0010)
         {
-            if (board.at(d) == Piece::EMPTY &&
-                board.at(c) == Piece::EMPTY &&
+            if (board.at(d) == Piece::EMPTY && board.at(c) == Piece::EMPTY &&
                 board.at(b) == Piece::EMPTY)
             {
                 if (!isSquareAttacked(board, kingPos, Player::WHITE) &&
                     !isSquareAttacked(board, d, Player::WHITE) &&
                     !isSquareAttacked(board, c, Player::WHITE))
                 {
-                    buffer[cnt++] = makeBitMove(
-                        positionToSquare(kingPos),
-                        positionToSquare(c),
-                        Piece::EMPTY,
-                        false,
-                        true,
-                        false,
-                        false
-                    );
+                    buffer[cnt++] = makeBitMove(positionToSquare(kingPos),
+                                                positionToSquare(c),
+                                                Piece::EMPTY,
+                                                false,
+                                                true,
+                                                false,
+                                                false);
                 }
             }
         }
@@ -440,7 +427,8 @@ int generateAllLegalMoves(const Board& board, Move* buffer)
     BitMove filterdMoves[2000];
     int nLegalMoves = filterLegalMoves(board, allMoves, nAll, filterdMoves);
 
-    for (int i = 0; i < nLegalMoves; i++) buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
+    for (int i = 0; i < nLegalMoves; i++)
+        buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
 
     return nLegalMoves;
 }
@@ -467,7 +455,8 @@ int generateLegalCaptureMoves(const Board& board, Move* buffer)
     BitMove filterdMoves[2000];
     int nLegalMoves = filterLegalMoves(board, captureMoves, ncaptureMoves, filterdMoves);
 
-    for (int i = 0; i < nLegalMoves; i++) buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
+    for (int i = 0; i < nLegalMoves; i++)
+        buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
 
     return nLegalMoves;
 }

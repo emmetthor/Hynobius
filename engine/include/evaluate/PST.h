@@ -4,4 +4,4 @@
 
 int evaluatePieceSquare(Piece p, Position pp);
 
-int computePST(const Board &board);
+int computePST(const Board& board);

@@ -5,4 +5,4 @@
 
 int pieceValue(const Piece p);
 
-int computePieceValue(const Board &board);
+int computePieceValue(const Board& board);

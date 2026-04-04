@@ -4,7 +4,6 @@
 #include <board/Piece.h>
 #include <cstdint>
 
-
 // intergret move infos
 // placedPiece: The piece that actually placed at Position to
 struct MoveState
@@ -15,14 +14,14 @@ struct MoveState
 
     bool isCastle, isPromotion;
 
-    MoveState(const Board &board, const BitMove move)
+    MoveState(const Board& board, const BitMove move)
     {
         from = squareToPosition(getFromSquare(move));
         to = squareToPosition(getToSquare(move));
 
         movePiece = board.at(from);
         capturedPiece = board.at(to);
-        
+
         isCastle = getCastle(move);
         isPromotion = getPromotion(move);
 
@@ -54,7 +53,7 @@ struct UndoState
 
     Player player;
 
-    inline void make(const Board &board, const MoveState &state)
+    inline void make(const Board& board, const MoveState& state)
     {
         capturedPiece = state.capturedPiece;
         movePiece = state.movePiece;
@@ -71,6 +70,6 @@ struct UndoState
     }
 };
 
-void doBitMove(Board &board, const BitMove move, UndoState &undo);
+void doBitMove(Board& board, const BitMove move, UndoState& undo);
 
-void undoBitMove(Board &board, const BitMove move, const UndoState &undo);
+void undoBitMove(Board& board, const BitMove move, const UndoState& undo);

@@ -1,16 +1,16 @@
+#include "move/Make_BitMove.h"
 #include "debug.h"
 #include "evaluate/Material_Point.h"
 #include "evaluate/PST.h"
-#include "move/Make_BitMove.h"
 #include "search/Zobrist.h"
 
-void doRegularMove(Board &board, const MoveState &state)
+void doRegularMove(Board& board, const MoveState& state)
 {
     board.set(state.from, Piece::EMPTY);
     board.set(state.to, state.placedPiece);
 }
 
-void doCastling(Board &board, const MoveState &state)
+void doCastling(Board& board, const MoveState& state)
 {
     // move king.
     if (board.at(state.from) != makePiece(board.player, 'K'))
@@ -45,7 +45,7 @@ void doCastling(Board &board, const MoveState &state)
     board.set(rookTo, rook);
 }
 
-void undoCastling(Board &board, const UndoState &state)
+void undoCastling(Board& board, const UndoState& state)
 {
     // move king back
     if (board.at(state.to) != state.movePiece)
@@ -86,7 +86,7 @@ void undoCastling(Board &board, const UndoState &state)
     board.set(rookTo, rook);
 }
 
-void doBitMove(Board &board, const BitMove move, UndoState &undo)
+void doBitMove(Board& board, const BitMove move, UndoState& undo)
 {
     // make current move state.
     MoveState state(board, move);
@@ -120,7 +120,7 @@ void doBitMove(Board &board, const BitMove move, UndoState &undo)
     board.player = opponent(board.player);
 }
 
-void undoBitMove(Board &board, const BitMove move, const UndoState &undo)
+void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
 {
     if (undo.isCastle)
     {

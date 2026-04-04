@@ -1,7 +1,7 @@
 #pragma once
 
-#include "move/Move.h"
 #include "Type.h"
+#include "move/Move.h"
 
 struct ScoreMove
 {

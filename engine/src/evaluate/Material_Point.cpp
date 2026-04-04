@@ -41,7 +41,7 @@ int pieceValue(const Piece p)
     return 0;
 }
 
-int computePieceValue(const Board &board)
+int computePieceValue(const Board& board)
 {
     int res = 0;
 

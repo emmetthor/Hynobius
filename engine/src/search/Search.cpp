@@ -12,8 +12,6 @@
 #include "evaluate/Material_Point.h"
 #include "move/Generate_Move.h"
 #include "move/Move.h"
-#include "move/Move_Order.h"
-#include "search/Killer_Move.h"
 #include "search/TT.h"
 #include <chrono>
 
@@ -112,7 +110,7 @@ SearchResult Search::findBestMove(const Board& board, int depth)
         finalRes.info.nodes = negamaxNodes + qsNodes;
         finalRes.info.qsnodes = qsNodes;
         finalRes.info.timeMs =
-        std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+            std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
         finalRes.info.score = finalRes.bestScore;
     }
 
@@ -130,7 +128,7 @@ Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterat
     BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
 
-    // WARN removed 
+    // WARN removed
     // sort moves
     // advanceMoves adv = {iterativeMove, killerMove[0][ply], killerMove[1][ply]};
     // sortMove(board, moves, nMoves, adv);

@@ -2,10 +2,10 @@
 #include "move/Move.h"
 #pragma GCC optimize("O3,unroll-loops")
 
-#include "move/Move_Order.h"
 #include "evaluate/Material_Point.h"
 #include "evaluate/SEE.h"
 #include "move/Make_BitMove.h"
+#include "move/Move_Order.h"
 
 #include <algorithm>
 

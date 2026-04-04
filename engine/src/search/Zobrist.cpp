@@ -26,7 +26,7 @@ void initZobrist()
         zobCastle[i] = rand64();
 }
 
-uint64_t computeZobrist(const Board &board)
+uint64_t computeZobrist(const Board& board)
 {
     uint64_t key = 0;
 
