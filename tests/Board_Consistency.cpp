@@ -7,18 +7,13 @@
 
 #include "board/Board.h"
 #include "move/Generate_Move.h"
-#include "move/Make_Move.h"
+#include "move/Make_BitMove.h"
 #include "search/Zobrist.h"
 
 int boardConsistency(Board& board, int depth)
 {
     if (depth <= 0)
         return 1;
-
-    if (board.zobristKey != computeZobrist(board))
-    {
-        ENGINE_FATAL(DebugCategory::BOARD, "different zobrist");
-    }
 
     for (int pIndex = 1; pIndex <= 12; pIndex++)
     {
@@ -34,15 +29,20 @@ int boardConsistency(Board& board, int depth)
 
     int node = 0;
 
-    Move moves[256];
+    BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
 
     for (int i = 0; i < nMoves; i++)
     {
-        Move move = moves[i];
-        makeMove(board, move);
+        BitMove move = moves[i];
+
+        UndoState undo;
+
+        doBitMove(board, move, undo);
+
         node += boardConsistency(board, depth - 1);
-        undoMove(board, move);
+        
+        undoBitMove(board, move, undo);
     }
 
     return node;

@@ -3,6 +3,7 @@
 #include "../engine/include/move/Generate_Move.h"
 #include "../engine/include/move/Make_Move.h"
 #include "../engine/include/move/Move.h"
+#include "move/Make_BitMove.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,15 +14,20 @@ int perft(Board& board, int depth)
         return 1;
     int nodes = 0;
 
-    Move moves[256];
+    BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
 
     for (int i = 0; i < nMoves; i++)
     {
-        Move move = moves[i];
-        makeMove(board, move);
+        BitMove move = moves[i];
+        
+        UndoState undo;
+
+        doBitMove(board, move, undo);
+
         nodes += perft(board, depth - 1);
-        undoMove(board, move);
+        
+        undoBitMove(board, move, undo);
     }
 
     return nodes;
