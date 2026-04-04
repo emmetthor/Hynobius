@@ -61,6 +61,19 @@ int updateCastleRights(int castleRights, const MoveState& state)
                 castleRights &= ~0b0001;
         }
     }
+    else
+    {
+        if (state.isCapture && state.capturedPiece == makePiece(Player::WHITE, 'R'))
+        {
+            if (state.to.row == 0 && state.to.col == 0) castleRights &= ~0b1000;
+            if (state.to.row == 0 && state.to.col == 7) castleRights &= ~0b0100;
+        }
+        if (state.isCapture && state.capturedPiece == makePiece(Player::BLACK, 'R'))
+        {
+            if (state.to.row == 7 && state.to.col == 0) castleRights &= ~0b0010;
+            if (state.to.row == 7 && state.to.col == 7) castleRights &= ~0b0001;
+        }
+    }
 
     return castleRights;
 }
@@ -152,13 +165,14 @@ void updateMaterialScoreDo(Board& board, const MoveState& state, int weight)
 
     if (state.isCapture)
     {
-        board.materialScore -= weight * pieceValue(state.capturedPiece);
+        // capture enemy's -> get the piece's score
+        board.materialScore += weight * pieceValue(state.capturedPiece);
     }
 
     if (state.isPromotion)
     {
         board.materialScore -= weight * pieceValue(state.movePiece);
-        board.materialScore -= weight * pieceValue(state.placedPiece);
+        board.materialScore += weight * pieceValue(state.placedPiece);
     }
 }
 
@@ -175,7 +189,8 @@ void updatePSTScoreDo(Board& board, const MoveState& state, int weight)
     {
         Position capturedPos = state.to; // normal capture
 
-        board.PSTScore -= weight * evaluatePieceSquare(state.capturedPiece, capturedPos);
+        // capture enemy's -> weight *= -1
+        board.PSTScore -= -weight * evaluatePieceSquare(state.capturedPiece, capturedPos);
     }
 
     // castling
@@ -252,8 +267,8 @@ void updateZobristDo(Board& board, const MoveState& state, int oldCastleRights, 
     board.zobristKey ^= zobPlayer;
 
     // update castle right zob
-    board.zobristKey ^= oldCastleRights;
-    board.zobristKey ^= newCastleRights;
+    board.zobristKey ^= zobCastle[oldCastleRights];
+    board.zobristKey ^= zobCastle[newCastleRights];
 }
 
 void doBitMove(Board& board, const BitMove move, UndoState& undo)
@@ -277,6 +292,7 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     // update castle rights.
     int oldCastleRights = state.castleRights;
     int newCastelRights = updateCastleRights(oldCastleRights, state);
+    board.castleRights = newCastelRights;
 
     // calculate weight
     int weight = (state.player == Player::WHITE ? 1 : -1);
@@ -287,14 +303,18 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     // update PST score.
     updatePSTScoreDo(board, state, weight);
 
-    // update Zobrist.
-    updateZobristDo(board, state, oldCastleRights, newCastelRights);
-
     // update piece pos.
     computePiecePos(board);
 
     // change player.
     board.player = opponent(board.player);
+
+    // update Zobrist.
+    updateZobristDo(board, state, oldCastleRights, newCastelRights);
+
+    assert(board.materialScore == computePieceValue(board));
+    assert(board.PSTScore == computePST(board));
+    assert(board.zobristKey == computeZobrist(board));
 }
 
 void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
@@ -317,4 +337,8 @@ void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
     board.player = opponent(board.player);
 
     computePiecePos(board);
+
+    assert(board.materialScore == computePieceValue(board));
+    assert(board.PSTScore == computePST(board));
+    assert(board.zobristKey == computeZobrist(board));
 }

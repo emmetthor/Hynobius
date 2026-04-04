@@ -201,7 +201,7 @@ int generatePawnCaptures(const Board& board, BitMove* buffer)
                     buffer[cnt++] = makeBitMove(positionToSquare(fromPos),
                                                 positionToSquare(toPos),
                                                 promo,
-                                                false,
+                                                true,
                                                 false,
                                                 false,
                                                 true);
@@ -212,7 +212,7 @@ int generatePawnCaptures(const Board& board, BitMove* buffer)
                 buffer[cnt++] = makeBitMove(positionToSquare(fromPos),
                                             positionToSquare(toPos),
                                             Piece::EMPTY,
-                                            false,
+                                            true,
                                             false,
                                             false,
                                             false);
