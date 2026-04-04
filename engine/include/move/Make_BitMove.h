@@ -52,6 +52,8 @@ struct UndoState
     int PSTScore;
     uint64_t zobristKey;
 
+    Player player;
+
     inline void make(const Board &board, const MoveState &state)
     {
         capturedPiece = state.capturedPiece;
@@ -65,6 +67,7 @@ struct UndoState
         materialScore = board.materialScore;
         PSTScore = board.PSTScore;
         zobristKey = board.zobristKey;
+        player = board.player;
     }
 };
 
