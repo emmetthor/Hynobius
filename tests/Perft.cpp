@@ -18,13 +18,13 @@ int perft(Board& board, int depth)
     for (int i = 0; i < nMoves; i++)
     {
         BitMove move = moves[i];
-        
+
         UndoState undo;
 
         doBitMove(board, move, undo);
 
         nodes += perft(board, depth - 1);
-        
+
         undoBitMove(board, move, undo);
     }
 

@@ -40,7 +40,7 @@ int boardConsistency(Board& board, int depth)
         doBitMove(board, move, undo);
 
         node += boardConsistency(board, depth - 1);
-        
+
         undoBitMove(board, move, undo);
     }
 

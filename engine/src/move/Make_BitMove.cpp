@@ -5,7 +5,6 @@
 #include "evaluate/Material_Point.h"
 #include "evaluate/PST.h"
 #include "search/Zobrist.h"
-#include "evaluate/PST.h"
 
 void doRegularMove(Board& board, const MoveState& state)
 {
@@ -141,14 +140,14 @@ void undoCastling(Board& board, const UndoState& state)
     board.set(rookTo, rook);
 }
 
-void updateMaterialScoreDo(Board& board, const MoveState &state, int weight)
+void updateMaterialScoreDo(Board& board, const MoveState& state, int weight)
 {
     if (state.isCastle)
     {
         // castling should not change material score.
         return;
     }
-    
+
     if (state.isCapture)
     {
         board.materialScore -= weight * pieceValue(state.capturedPiece);
