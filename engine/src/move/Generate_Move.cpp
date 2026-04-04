@@ -403,7 +403,7 @@ int generateCaptureMoves(const Board& board, BitMove* buffer)
     return cnt;
 }
 
-int filterLegalMoves(const Board& board, Move* allMoves, int nAllMoves, Move* buffer)
+int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, Move* buffer)
 {
     ENGINE_ASSERT(isPlayerValid(player));
 
@@ -414,27 +414,17 @@ int filterLegalMoves(const Board& board, Move* allMoves, int nAllMoves, Move* bu
 
     for (int i = 0; i < nAllMoves; i++)
     {
-        Move oriMove = allMoves[i];
-        BitMove move = makeBitMove(
-            positionToSquare(oriMove.from),
-            positionToSquare(oriMove.to),
-            oriMove.promotionPiece,
-            (isValidPieceIndex(pieceToIndex(oriMove.capturePiece)) ? true : false),
-            false,
-            false,
-            oriMove.isEnPassant
-        );
-        // WARN castling are invalid now.
+        Move orimove = bitMovetoOriMove(board, allMoves[i]);
 
         UndoState undo;
-        doBitMove(copyBoard, move, undo);
+        doBitMove(copyBoard, allMoves[i], undo);
 
         if (!isInCheck(copyBoard, opponent(copyBoard.player)))
         {
-            buffer[cnt++] = oriMove;
+            buffer[cnt++] = orimove;
         }
 
-        undoBitMove(copyBoard, move, undo);
+        undoBitMove(copyBoard, allMoves[i], undo);
     }
 
     return cnt;
@@ -447,14 +437,7 @@ int generateAllLegalMoves(const Board& board, Move* buffer)
     BitMove allMoves[2000];
     int nAll = generateAllMoves(board, allMoves);
 
-    // WARN temporary transformation
-    Move oriMoves[2000];
-    for (int i = 0; i < nAll; i++)
-    {
-        oriMoves[i] = bitMovetoOriMove(board, allMoves[i]);
-    }
-
-    int nLegalMoves = filterLegalMoves(board, oriMoves, nAll, buffer);
+    int nLegalMoves = filterLegalMoves(board, allMoves, nAll, buffer);
 
     return nLegalMoves;
 }
@@ -466,14 +449,7 @@ int generateLegalCaptureMoves(const Board& board, Move* buffer)
     BitMove captureMoves[2000];
     int ncaptureMoves = generateCaptureMoves(board, captureMoves);
 
-    // WARN temporary transformation
-    Move oriMoves[2000];
-    for (int i = 0; i < ncaptureMoves; i++)
-    {
-        oriMoves[i] = bitMovetoOriMove(board, captureMoves[i]);
-    }
-
-    int nLegalMoves = filterLegalMoves(board, oriMoves, ncaptureMoves, buffer);
+    int nLegalMoves = filterLegalMoves(board, captureMoves, ncaptureMoves, buffer);
 
     return nLegalMoves;
 }
