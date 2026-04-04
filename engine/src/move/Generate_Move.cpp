@@ -403,7 +403,7 @@ int generateCaptureMoves(const Board& board, BitMove* buffer)
     return cnt;
 }
 
-int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, Move* buffer)
+int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, BitMove* buffer)
 {
     ENGINE_ASSERT(isPlayerValid(player));
 
@@ -414,17 +414,17 @@ int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, Move*
 
     for (int i = 0; i < nAllMoves; i++)
     {
-        Move orimove = bitMovetoOriMove(board, allMoves[i]);
-
+        BitMove move = allMoves[i];
         UndoState undo;
-        doBitMove(copyBoard, allMoves[i], undo);
+
+        doBitMove(copyBoard, move, undo);
 
         if (!isInCheck(copyBoard, opponent(copyBoard.player)))
         {
-            buffer[cnt++] = orimove;
+            buffer[cnt++] = move;
         }
 
-        undoBitMove(copyBoard, allMoves[i], undo);
+        undoBitMove(copyBoard, move, undo);
     }
 
     return cnt;
@@ -437,12 +437,42 @@ int generateAllLegalMoves(const Board& board, Move* buffer)
     BitMove allMoves[2000];
     int nAll = generateAllMoves(board, allMoves);
 
+    BitMove filterdMoves[2000];
+    int nLegalMoves = filterLegalMoves(board, allMoves, nAll, filterdMoves);
+
+    for (int i = 0; i < nLegalMoves; i++) buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
+
+    return nLegalMoves;
+}
+
+int generateAllLegalMoves(const Board& board, BitMove* buffer)
+{
+    ENGINE_ASSERT(isPlayerValid(board.player));
+
+    BitMove allMoves[2000];
+    int nAll = generateAllMoves(board, allMoves);
+
     int nLegalMoves = filterLegalMoves(board, allMoves, nAll, buffer);
 
     return nLegalMoves;
 }
 
 int generateLegalCaptureMoves(const Board& board, Move* buffer)
+{
+    ENGINE_ASSERT(isPlayerValid(player));
+
+    BitMove captureMoves[2000];
+    int ncaptureMoves = generateCaptureMoves(board, captureMoves);
+
+    BitMove filterdMoves[2000];
+    int nLegalMoves = filterLegalMoves(board, captureMoves, ncaptureMoves, filterdMoves);
+
+    for (int i = 0; i < nLegalMoves; i++) buffer[i] = bitMovetoOriMove(board, filterdMoves[i]);
+
+    return nLegalMoves;
+}
+
+int generateLegalCaptureMoves(const Board& board, BitMove* buffer)
 {
     ENGINE_ASSERT(isPlayerValid(player));
 
