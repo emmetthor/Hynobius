@@ -1,7 +1,8 @@
 @echo off
 echo Formatting tracked files...
 
-for /f "delims=" %%f in ('git ls-files *.cpp *.h *.hpp *.cc') do (
+for /f "delims=" %%f in ('git ls-files ^| findstr /r "\.cpp$ \.cc$ \.h$ \.hpp$"') do (
+    echo Formatting %%f
     clang-format -i "%%f"
 )
 
