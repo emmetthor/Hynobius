@@ -1,8 +1,8 @@
 <div align="center">
     <img src="docs/img/icon-128.png">
-
+    <br>
     <h3>Hynobius</h3>
-    A full documented (TODO) chess engine.
+    A full documented (trying) chess engine.
 </div>
 
 # chess-analysis-engine
