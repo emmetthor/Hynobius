@@ -90,20 +90,20 @@ int updateCastleRights(int castleRights, const Move& move)
         if (player == Player::WHITE)
         {
             if (fromCol == 0)
-                // white king side
-                castleRights &= ~0b0100;
-            else if (fromCol == 7)
                 // white queen side
                 castleRights &= ~0b1000;
+            else if (fromCol == 7)
+                // white king side
+                castleRights &= ~0b0100;
         }
         else
         {
             if (fromCol == 0)
-                // black king side
-                castleRights &= ~0b0001;
-            else if (fromCol == 7)
                 // black queen side
                 castleRights &= ~0b0010;
+            else if (fromCol == 7)
+                // black king side
+                castleRights &= ~0b0001;
         }
     }
 

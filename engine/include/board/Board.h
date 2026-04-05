@@ -17,6 +17,24 @@ struct Position
     }
 };
 
+// WARN temporary transfrom fuction
+inline Position squareToPosition(Square square)
+{
+    return {square / 8, square % 8};
+}
+
+// WARN temporary transfrom fuction
+inline Square positionToSquare(Position pos)
+{
+    return static_cast<Square>(pos.row * 8 + pos.col);
+}
+
+inline bool isValidSquare(Square square)
+{
+    int intSquare = static_cast<int>(square);
+    return ((0 <= intSquare && intSquare < 64) ? true : false);
+}
+
 // Check whether a position is inside board. (8 x 8)
 inline bool isInBoard(Position pos)
 {

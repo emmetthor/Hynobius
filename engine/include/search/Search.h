@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Search_Variables.h"
 #include "board/Board.h"
 #include "evaluate/Evaluate.h"
+#include "move/Make_BitMove.h"
 #include "move/Move.h"
 
 constexpr int MATE_SCORE = 1e6;
@@ -15,6 +17,7 @@ struct SearchInfo
     int timeMs;
     int nps;
 };
+
 struct SearchResult
 {
     Move bestMove;
@@ -27,6 +30,8 @@ class Search
 public:
     Search(Evaluate& _eval);
     SearchResult findBestMove(const Board& board, int depth);
+
+    UndoState movestk[SearchVarialble::MAX_SEARCH_DEPTH];
 
 private:
     Evaluate eval;

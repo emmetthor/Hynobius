@@ -1,8 +1,9 @@
 #include "Engine.h"
 
 #include "board/Board.h"
+#include "board/Piece.h"
 #include "fen/FEN_Parser.h"
-#include "move/Make_Move.h"
+#include "move/Make_BitMove.h"
 #include "move/Move.h"
 #include "search/Search.h"
 
@@ -27,7 +28,17 @@ Board Engine::getBoard()
 
 void Engine::move(Move move)
 {
-    makeMove(board, move);
+    BitMove bitMove =
+        makeBitMove(positionToSquare(move.from),
+                    positionToSquare(move.to),
+                    move.promotionPiece,
+                    (isValidPieceIndex(pieceToIndex(move.capturePiece)) ? true : false),
+                    (move.castle == Castle::NOT ? false : true),
+                    false,
+                    move.isPromotion);
+
+    UndoState undo;
+    doBitMove(board, bitMove, undo);
 }
 
 void Engine::changePlayer()

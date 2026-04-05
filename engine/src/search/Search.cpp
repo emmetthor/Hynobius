@@ -1,4 +1,6 @@
 #include "search/Search.h"
+#include "board/Piece.h"
+#include "move/Make_BitMove.h"
 
 #pragma GCC optimize("O3,unroll-loops")
 
@@ -9,10 +11,7 @@
 #include "evaluate/Evaluate.h"
 #include "evaluate/Material_Point.h"
 #include "move/Generate_Move.h"
-#include "move/Make_Move.h"
 #include "move/Move.h"
-#include "move/Move_Order.h"
-#include "search/Killer_Move.h"
 #include "search/TT.h"
 #include <chrono>
 
@@ -126,33 +125,32 @@ Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterat
     res.bestScore = -INF;
 
     // generate all moves
-    Move moves[256];
+    BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
 
+    // WARN removed
     // sort moves
-    advanceMoves adv = {iterativeMove, killerMove[0][ply], killerMove[1][ply]};
-    sortMove(board, moves, nMoves, adv);
+    // advanceMoves adv = {iterativeMove, killerMove[0][ply], killerMove[1][ply]};
+    // sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++)
     {
-        Move move = moves[i];
+        BitMove move = moves[i];
 
-        moveStk[backIterator++] = move;
+        UndoState undo;
 
         // recursive
-        makeMove(board, move);
+        doBitMove(board, move, undo);
 
         int score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
 
-        undoMove(board, move);
-
-        backIterator--;
+        undoBitMove(board, move, undo);
 
         // LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
 
         if (score > res.bestScore)
         {
-            res.bestMove = move;
+            res.bestMove = bitMovetoOriMove(board, move);
             res.bestScore = score;
         }
     }
@@ -189,7 +187,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
     }
 
     // generate all moves
-    Move moves[256];
+    BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
     totalMoves += nMoves;
 
@@ -204,40 +202,22 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             return 0;
     }
 
-    advanceMoves adv = {ttMove, killerMove[0][ply], killerMove[1][ply]};
-    sortMove(board, moves, nMoves, adv);
+    // WARN removed
+    // advanceMoves adv = {ttMove, killerMove[0][ply], killerMove[1][ply]};
+    // sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++)
     {
         int searchDepth = depth - 1;
-        Move move = moves[i];
 
-        moveStk[backIterator++] = move;
+        BitMove move = moves[i];
 
-        // WARN LMR abandoned
-        // if (!move.isPromotion && move.capturePiece == Piece::EMPTY && depth >= 3 &&
-        // !isInCheck(board, player)) {
-        //     if (i >= 4) {
-        //         searchDepth--;
-        //     }
-
-        //     if (i >= 7) {
-        //         searchDepth--;
-        //     }
-        // }
+        UndoState undo;
 
         int score = 0;
 
-        makeMove(board, move);
-
-        // score = -negamax(
-        //     board,
-        //     depth - 1,
-        //     -beta,
-        //     -alpha,
-        //     opponent(player),
-        //     ply + 1
-        // );
+        // recursive
+        doBitMove(board, move, undo);
 
         if (i == 0)
         {
@@ -254,14 +234,12 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             }
         }
 
-        undoMove(board, move);
-
-        backIterator--;
+        undoBitMove(board, move, undo);
 
         if (score > bestScore)
         {
             bestScore = score;
-            bestMove = move;
+            bestMove = bitMovetoOriMove(board, move);
         }
 
         if (score > alpha)
@@ -301,12 +279,12 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
     if (standerdPoint > alpha)
         alpha = standerdPoint;
 
-    Move captureMoves[256];
+    BitMove captureMoves[256];
     int nCaptureMoves = generateLegalCaptureMoves(board, captureMoves);
 
-    advanceMoves adv = {inValidMove, killerMove[0][ply], killerMove[1][ply]};
-
-    sortMove(board, captureMoves, nCaptureMoves, adv);
+    // WARN removed
+    // advanceMoves adv = {inValidMove, killerMove[0][ply], killerMove[1][ply]};
+    // sortMove(board, captureMoves, nCaptureMoves, adv);
 
     if (nCaptureMoves == 0)
     {
@@ -315,21 +293,26 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
 
     for (int i = 0; i < nCaptureMoves; i++)
     {
-        Move move = captureMoves[i];
+        BitMove move = captureMoves[i];
+
+        MoveState state(board, move);
 
         // delta pruning
-        Piece captured = move.capturePiece;
+        Piece captured = state.capturedPiece;
         ENGINE_ASSERT(!(!move.isPromotion && captured == Piece::EMPTY));
-        if (!move.isPromotion && pieceValue(move.movePiece) >= pieceValue(captured) + 200)
+        if (!state.isPromotion && pieceValue(state.movePiece) >= pieceValue(captured) + 200)
             continue;
 
-        makeMove(board, move);
+        UndoState undo;
+
+        // recursive
+        doBitMove(board, move, undo);
 
         int score = 0;
         ENGINE_ASSERT(!isInCheck(board, player));
         score = -quietscence(board, -beta, -alpha, ply + 1);
 
-        undoMove(board, move);
+        undoBitMove(board, move, undo);
 
         if (score >= beta)
             return score;

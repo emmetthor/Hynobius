@@ -78,7 +78,7 @@ int evaluatePieceSquare(Piece p, Position pp)
     return 0;
 }
 
-int computePST(const Board board)
+int computePST(const Board& board)
 {
     int res = 0;
     for (int r = 0; r < 8; r++)
