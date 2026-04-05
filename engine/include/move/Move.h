@@ -3,7 +3,7 @@
 #include "Type.h"
 #include "board/Board.h"
 #include "board/Piece.h"
-#include "debug.h"
+#include "debug/log.h"
 
 enum Castle
 {
@@ -37,7 +37,7 @@ inline Square getFromSquare(const BitMove move)
 
     if (!isValidSquare(res))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid from square: ", res);
+        ENGINE_FATAL("bit move", "invalid from square: ", res);
     }
 
     return res;
@@ -49,7 +49,7 @@ inline Square getToSquare(const BitMove move)
 
     if (!isValidSquare(res))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid to square: ", res);
+        ENGINE_FATAL("bit move", "invalid to square: ", res);
     }
 
     return res;
@@ -61,7 +61,7 @@ inline Piece getPromotePiece(const BitMove move)
 
     if (pieceIndex != 0 && !isValidPieceIndex(pieceIndex))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid piece index: ", pieceIndex);
+        ENGINE_FATAL("bit move", "invalid piece index: ", pieceIndex);
     }
 
     return static_cast<Piece>(pieceIndex);
@@ -97,16 +97,16 @@ inline BitMove makeBitMove(const Square from,
 {
     if (!isValidSquare(from))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid from square:", from);
+        ENGINE_FATAL("bit move", "invalid from square:", from);
     }
 
     if (!isValidSquare(to))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid to square:", to);
+        ENGINE_FATAL("bit move", "invalid to square:", to);
     }
     if (promotePiece != Piece::EMPTY && !isValidPieceIndex(pieceToIndex(promotePiece)))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid promotion piece:", pieceToIndex(promotePiece));
+        ENGINE_FATAL("bit move", "invalid promotion piece:", pieceToIndex(promotePiece));
     }
 
     BitMove res = 0;

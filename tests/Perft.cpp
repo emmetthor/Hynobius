@@ -88,5 +88,5 @@ int main()
     std::cout << "success test cases: " << totalTestCases - failedTestCases - expected << '/'
               << totalTestCases << " [expected: " << expected << "]\n";
 
-    assert(failedTestCases == 0);
+    ENGINE_ASSERT(failedTestCases == 0);
 }

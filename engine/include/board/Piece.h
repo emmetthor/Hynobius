@@ -1,6 +1,6 @@
 #pragma once
 
-#include "debug.h"
+#include "debug/log.h"
 
 #include <cctype>
 
@@ -51,7 +51,7 @@ inline int charToPieceIndex(char c)
         case 'K':
             return 5;
         default:
-            ENGINE_FATAL(DebugCategory::PIECE, "invalid input: ", c);
+            ENGINE_FATAL("piece", "invalid input: ", c);
     }
 }
 
@@ -68,7 +68,7 @@ inline char pieceToChar(Piece p)
 
     if (!(0 <= pIndex && pIndex <= 12))
     {
-        ENGINE_FATAL(DebugCategory::PIECE, "invalid piece index: ", pIndex);
+        ENGINE_FATAL("piece", "invalid piece index: ", pIndex);
     }
 
     return PIECE_TO_CHAR[pieceToIndex(p)];
@@ -79,7 +79,7 @@ inline bool isWhite(Piece p)
 {
     if (p == Piece::EMPTY)
     {
-        ENGINE_FATAL(DebugCategory::PIECE, "empty piece does not have a color");
+        ENGINE_FATAL("piece", "empty piece does not have a color");
     }
 
     int wp = pieceToIndex(Piece::WPAWN), wk = pieceToIndex(Piece::WKING),
@@ -95,7 +95,7 @@ inline bool isBlack(Piece p)
 {
     if (p == Piece::EMPTY)
     {
-        ENGINE_FATAL(DebugCategory::PIECE, "empty piece does not have a color");
+        ENGINE_FATAL("piece", "empty piece does not have a color");
     }
 
     int bp = pieceToIndex(Piece::BPAWN), bk = pieceToIndex(Piece::BKING),
@@ -111,11 +111,11 @@ inline bool isSameColor(Piece p1, Piece p2)
 {
     if (p1 == Piece::EMPTY)
     {
-        ENGINE_FATAL(DebugCategory::PIECE, "empty piece does not have a color");
+        ENGINE_FATAL("piece", "Non-piece Piece::Object does not have a color");
     }
     if (p2 == Piece::EMPTY)
     {
-        ENGINE_FATAL(DebugCategory::PIECE, "empty piece does not have a color");
+        ENGINE_FATAL("piece", "Non-piece Piece::Object does not have a color");
     }
 
     return isWhite(p1) == isWhite(p2);

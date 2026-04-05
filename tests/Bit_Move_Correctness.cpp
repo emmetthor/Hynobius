@@ -24,13 +24,13 @@ int main()
                                             enPassant,
                                             promote);
 
-                    assert(getFromSquare(m) == from);
-                    assert(getToSquare(m) == to);
-                    assert(getPromotePiece(m) == static_cast<Piece>(pieceIndex));
-                    assert(getCapture(m) == capture);
-                    assert(getCastle(m) == castle);
-                    assert(getEnPassant(m) == enPassant);
-                    assert(getPromotion(m) == promote);
+                    ENGINE_ASSERT(getFromSquare(m) == from);
+                    ENGINE_ASSERT(getToSquare(m) == to);
+                    ENGINE_ASSERT(getPromotePiece(m) == static_cast<Piece>(pieceIndex));
+                    ENGINE_ASSERT(getCapture(m) == capture);
+                    ENGINE_ASSERT(getCastle(m) == castle);
+                    ENGINE_ASSERT(getEnPassant(m) == enPassant);
+                    ENGINE_ASSERT(getPromotion(m) == promote);
                 }
             }
         }

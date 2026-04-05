@@ -200,6 +200,7 @@
 // #define LOG_ERROR(...)
 // #endif
 
+/*
 #pragma once
 #include <cassert>
 #include <cstdint>
@@ -304,3 +305,5 @@ private:
 #define LOG_WARN(...)
 #define LOG_ERROR(...)
 #endif
+
+*/

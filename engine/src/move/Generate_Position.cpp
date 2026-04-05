@@ -183,12 +183,12 @@ int generatePiecePosFromPos(const Board& board, const Position& pos, Piece p, Po
 
         case Piece::WPAWN:
         case Piece::BPAWN:
-            ENGINE_FATAL(DebugCategory::GENERATE, "pawns are not pieces.");
+            ENGINE_FATAL("generate position", "pawns are not pieces.");
 
         case Piece::EMPTY:
-            ENGINE_FATAL(DebugCategory::GENERATE, "empty is not a piece.");
+            ENGINE_FATAL("generate position", "empty is not a piece.");
         case Piece::PIECE_COUNT:
-            ENGINE_FATAL(DebugCategory::GENERATE, "piece_count is not a piece.");
+            ENGINE_FATAL("generate position", "piece_count is not a piece.");
     }
 
     return 0;
@@ -240,12 +240,12 @@ int generatePieceCaptureFromPos(const Board& board, const Position& pos, Piece p
 
         case Piece::WPAWN:
         case Piece::BPAWN:
-            ENGINE_FATAL(DebugCategory::GENERATE, "pawns are not pieces.");
+            ENGINE_FATAL("generate position", "pawns are not pieces.");
 
         case Piece::EMPTY:
-            ENGINE_FATAL(DebugCategory::GENERATE, "empty is not a piece.");
+            ENGINE_FATAL("generate position", "empty is not a piece.");
         case Piece::PIECE_COUNT:
-            ENGINE_FATAL(DebugCategory::GENERATE, "piece_count is not a piece.");
+            ENGINE_FATAL("generate position", "piece_count is not a piece.");
     }
 
     return 0;

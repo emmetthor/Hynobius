@@ -84,5 +84,5 @@ int main()
         std::cout << a << " ; expected: " << b << " ; result: " << c << '\n';
     }
 
-    assert(failed.size() == 0);
+    ENGINE_ASSERT(failed.size() == 0);
 }

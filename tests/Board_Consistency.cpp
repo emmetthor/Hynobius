@@ -21,7 +21,7 @@ int boardConsistency(Board& board, int depth)
         {
             if (board.at(board.getPiecePos(p)[i]) != p)
             {
-                ENGINE_FATAL(DebugCategory::BOARD, "different piece position");
+                ENGINE_FATAL("board consistency", "different piece position");
             }
         }
     }
@@ -60,7 +60,7 @@ int main()
         int res = boardConsistency(board, 3);
         if (res != node)
         {
-            ENGINE_FATAL(DebugCategory::BOARD, "invalid node counts: ", res, ' ', node);
+            ENGINE_FATAL("board consistency", "invalid node counts: ", res, ' ', node);
         }
         std::cout << "test " << i + 1 << " completed with " << node << " nodes.\n";
     }

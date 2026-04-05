@@ -2,6 +2,8 @@
 
 #include "Piece.h"
 #include "Type.h"
+#include "board/Piece.h"
+#include "debug/log.h"
 
 #include <cstdint>
 
@@ -143,7 +145,7 @@ struct Board
             }
         }
 
-        ENGINE_FATAL(DebugCategory::BOARD, "can't find piece position");
+        ENGINE_FATAL("board", "can't find piece position");
     }
 
     // Add the Piece in `add` in `piecePos[Piece]`.
@@ -163,10 +165,12 @@ struct Board
     inline const int getPieceCount(Piece p) const
     {
         int pIndex = pieceToIndex(p);
-        if (!(1 <= pIndex && pIndex <= 12))
+        
+        if (!isValidPieceIndex(pieceToIndex(p)))
         {
-            ENGINE_FATAL(DebugCategory::BOARD, "pIndex is empty or invalid: ", pIndex);
+            ENGINE_FATAL("board", "Non-piece Piece::Object can't get piece count because it is not on the board.");
         }
+
         return pieceCount[pIndex];
     }
 };

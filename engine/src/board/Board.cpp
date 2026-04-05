@@ -1,7 +1,7 @@
 #include "board/Board.h"
 #include "Structure_IO.h"
 #include "board/Piece.h"
-#include "debug.h"
+#include "debug/log.h"
 #include "search/Zobrist.h"
 
 Board::Board()
@@ -76,11 +76,11 @@ Piece Board::at(Position pos) const
 {
     if (pos.row < 0 || pos.row >= 8)
     {
-        ENGINE_FATAL(DebugCategory::BOARD, "invalid row: ", pos);
+        ENGINE_FATAL("board", "invalid row: ", pos);
     }
     if (pos.col < 0 || pos.col >= 8)
     {
-        ENGINE_FATAL(DebugCategory::BOARD, "invalid col: ", pos);
+        ENGINE_FATAL("board", "invalid col: ", pos);
     }
 
     return board[pos.row][pos.col];

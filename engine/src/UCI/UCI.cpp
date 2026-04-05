@@ -46,7 +46,7 @@ std::string UCIMoveToString(const Move& move)
                 break;
             default:
                 ENGINE_FATAL(
-                    DebugCategory::BOARD, "promotion piece is not valid: ", move.promotionPiece);
+                    "uci", "promotion piece is not valid: ", move.promotionPiece);
         }
         res += promotionChar;
     }
@@ -94,7 +94,7 @@ void handlePosition(std::istringstream& iss, Engine& engine)
     }
     else
     {
-        ENGINE_FATAL(DebugCategory::BOARD, "Invalid UCI position command.");
+        ENGINE_FATAL("uci", "Invalid UCI position command.");
     }
 
     // no moves command

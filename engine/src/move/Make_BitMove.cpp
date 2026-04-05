@@ -87,7 +87,7 @@ void doCastling(Board& board, const MoveState& state)
     // move king.
     if (board.at(state.from) != makePiece(board.player, 'K'))
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid castling: not moving a king");
+        ENGINE_FATAL("bit move", "invalid castling: not moving a king");
     }
 
     board.set(state.from, Piece::EMPTY);
@@ -109,7 +109,7 @@ void doCastling(Board& board, const MoveState& state)
     }
     else
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid castling");
+        ENGINE_FATAL("bit move", "invalid castling");
     }
 
     Piece rook = board.at(rookFrom);
@@ -122,7 +122,7 @@ void undoCastling(Board& board, const UndoState& state)
     // move king back
     if (board.at(state.to) != state.movePiece)
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid undo castling: king not at destination");
+        ENGINE_FATAL("bit move", "invalid undo castling: king not at destination");
     }
 
     board.set(state.to, Piece::EMPTY);
@@ -144,7 +144,7 @@ void undoCastling(Board& board, const UndoState& state)
     }
     else
     {
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid undo castling");
+        ENGINE_FATAL("bit move", "invalid undo castling");
     }
 
     Piece rook = board.at(rookFrom);
@@ -152,7 +152,7 @@ void undoCastling(Board& board, const UndoState& state)
     if (rook != makePiece(state.player, 'R'))
     {
         std::cout << board << '\n';
-        ENGINE_FATAL(DebugCategory::MOVE, "invalid undo castling: rook not at expected square");
+        ENGINE_FATAL("bit move", "invalid undo castling: rook not at expected square");
     }
 
     board.set(rookFrom, Piece::EMPTY);
@@ -214,7 +214,7 @@ void updatePSTScoreDo(Board& board, const MoveState& state, int weight)
         }
         else
         {
-            ENGINE_FATAL(DebugCategory::MOVE, "invalid castling in PST update");
+            ENGINE_FATAL("bit move", "invalid castling in PST update");
         }
 
         Piece rook = makePiece(state.player, 'R');
@@ -259,7 +259,7 @@ void updateZobristDo(Board& board, const MoveState& state, int oldCastleRights, 
         }
         else
         {
-            ENGINE_FATAL(DebugCategory::MOVE, "invalid castling in PST update");
+            ENGINE_FATAL("bit move", "invalid castling in PST update");
         }
 
         int rookIndex = pieceToIndex(makePiece(state.player, 'R'));

@@ -35,7 +35,7 @@ int pieceValue(const Piece p)
             return 0;
 
         case Piece::PIECE_COUNT:
-            ENGINE_FATAL(DebugCategory::EVAL, "piece_count doesn't have a value.");
+            ENGINE_FATAL("evaluation", "piece_count doesn't have a value.");
     }
 
     return 0;

@@ -299,7 +299,7 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
 
         // delta pruning
         Piece captured = state.capturedPiece;
-        ENGINE_ASSERT(!(!move.isPromotion && captured == Piece::EMPTY));
+        ENGINE_ASSERT(!(!state.isPromotion && captured == Piece::EMPTY));
         if (!state.isPromotion && pieceValue(state.movePiece) >= pieceValue(captured) + 200)
             continue;
 
@@ -309,7 +309,7 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
         doBitMove(board, move, undo);
 
         int score = 0;
-        ENGINE_ASSERT(!isInCheck(board, player));
+
         score = -quietscence(board, -beta, -alpha, ply + 1);
 
         undoBitMove(board, move, undo);

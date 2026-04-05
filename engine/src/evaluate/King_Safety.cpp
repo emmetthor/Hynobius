@@ -9,7 +9,7 @@ Position findKing(const Board& board, Player player)
 
     if (kingCount != 1)
     {
-        ENGINE_FATAL(DebugCategory::EVAL, "no king or multiple kings. | kingCount =", kingCount);
+        ENGINE_FATAL("evaluation", "no king or multiple kings. | kingCount =", kingCount);
     }
 
     const Position* posArray = board.piecePos[kingIndex];

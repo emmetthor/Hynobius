@@ -276,17 +276,10 @@ int countStraightAttacks(const Board& board, Position pos, const Player player)
 // Calculate attacks in the designated square.
 int countSquareAttacks(const Board& board, Position pos, const Player player)
 {
-    // 檢查位置合法性
+    // check position.
     if (!isInBoard(pos))
     {
-        LOG_ERROR(DebugCategory::ATK, "position is invalid", pos);
-        ENGINE_ASSERT(isInBoard(pos));
-    }
-    // 檢查玩家合法性
-    if (!isPlayerValid(player))
-    {
-        LOG_ERROR(DebugCategory::ATK, "player is invalid", player);
-        ENGINE_ASSERT(isPlayerValid(player));
+        ENGINE_FATAL("attack", "position is not in board.");
     }
 
     int cnt = 0;
@@ -328,17 +321,10 @@ int countSquareAttacks(const Board& board, Position pos, const Player player)
 // Check whether the designated square is attacked.
 bool isSquareAttacked(const Board& board, Position pos, const Player player)
 {
-    // 檢查位置合法性
+    // check position
     if (!isInBoard(pos))
     {
-        LOG_ERROR(DebugCategory::ATK, "position is invalid", pos);
-        ENGINE_ASSERT(isInBoard(pos));
-    }
-    // 檢查玩家合法性
-    if (!isPlayerValid(player))
-    {
-        LOG_ERROR(DebugCategory::ATK, "player is invalid", player);
-        ENGINE_ASSERT(isPlayerValid(player));
+        ENGINE_FATAL("attack", "position is not in board.");
     }
 
     return (countSquareAttacks(board, pos, player) > 0 ? 1 : 0);

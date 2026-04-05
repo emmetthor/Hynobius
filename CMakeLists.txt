@@ -48,7 +48,6 @@
         engine/src/UCI/UCI.cpp
         engine/src/UCI/UCI_Move_Parser.cpp
 
-        engine/src/debug.cpp
         engine/src/Engine.cpp
     )
 
