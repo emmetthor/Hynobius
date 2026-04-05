@@ -65,13 +65,17 @@ int updateCastleRights(int castleRights, const MoveState& state)
     {
         if (state.isCapture && state.capturedPiece == makePiece(Player::WHITE, 'R'))
         {
-            if (state.to.row == 0 && state.to.col == 0) castleRights &= ~0b1000;
-            if (state.to.row == 0 && state.to.col == 7) castleRights &= ~0b0100;
+            if (state.to.row == 0 && state.to.col == 0)
+                castleRights &= ~0b1000;
+            if (state.to.row == 0 && state.to.col == 7)
+                castleRights &= ~0b0100;
         }
         if (state.isCapture && state.capturedPiece == makePiece(Player::BLACK, 'R'))
         {
-            if (state.to.row == 7 && state.to.col == 0) castleRights &= ~0b0010;
-            if (state.to.row == 7 && state.to.col == 7) castleRights &= ~0b0001;
+            if (state.to.row == 7 && state.to.col == 0)
+                castleRights &= ~0b0010;
+            if (state.to.row == 7 && state.to.col == 7)
+                castleRights &= ~0b0001;
         }
     }
 

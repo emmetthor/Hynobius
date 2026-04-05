@@ -30,15 +30,14 @@ Board Engine::getBoard()
 
 void Engine::move(Move move)
 {
-    BitMove bitMove = makeBitMove(
-        positionToSquare(move.from),
-        positionToSquare(move.to),
-        move.promotionPiece,
-        (isValidPieceIndex(pieceToIndex(move.capturePiece)) ? true : false),
-        (move.castle == Castle::NOT ? false : true),
-        false,
-        move.isPromotion
-    );
+    BitMove bitMove =
+        makeBitMove(positionToSquare(move.from),
+                    positionToSquare(move.to),
+                    move.promotionPiece,
+                    (isValidPieceIndex(pieceToIndex(move.capturePiece)) ? true : false),
+                    (move.castle == Castle::NOT ? false : true),
+                    false,
+                    move.isPromotion);
 
     UndoState undo;
     doBitMove(board, bitMove, undo);
