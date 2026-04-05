@@ -165,10 +165,12 @@ struct Board
     inline const int getPieceCount(Piece p) const
     {
         int pIndex = pieceToIndex(p);
-        
+
         if (!isValidPieceIndex(pieceToIndex(p)))
         {
-            ENGINE_FATAL("board", "Non-piece Piece::Object can't get piece count because it is not on the board.");
+            ENGINE_FATAL(
+                "board",
+                "Non-piece Piece::Object can't get piece count because it is not on the board.");
         }
 
         return pieceCount[pIndex];

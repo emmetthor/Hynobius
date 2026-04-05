@@ -24,8 +24,10 @@ inline void checkBoardState(const Board& board)
                 continue;
 
             // king 檢查
-            if (p == Piece::WHITE_KING) whiteKing++;
-            if (p == Piece::BLACK_KING) blackKing++;
+            if (p == Piece::WHITE_KING)
+                whiteKing++;
+            if (p == Piece::BLACK_KING)
+                blackKing++;
 
             // material
             recomputedMaterial += pieceValue(p) * (isWhite(p) ? 1 : -1);
@@ -35,19 +37,18 @@ inline void checkBoardState(const Board& board)
     // king invariant
     if (whiteKing != 1 || blackKing != 1)
     {
-        ENGINE_FATAL("BOARD", 
-            "invalid king count ",
-            "white=", whiteKing,
-            " black=", blackKing);
+        ENGINE_FATAL("BOARD", "invalid king count ", "white=", whiteKing, " black=", blackKing);
     }
 
     // material invariant
     if (recomputedMaterial != board.materialScore)
     {
         ENGINE_FATAL("EVAL",
-            "material mismatch ",
-            "cached=", board.materialScore,
-            " recomputed=", recomputedMaterial);
+                     "material mismatch ",
+                     "cached=",
+                     board.materialScore,
+                     " recomputed=",
+                     recomputedMaterial);
     }
 
 #endif

@@ -44,8 +44,7 @@ std::string UCIMoveToString(const Move& move)
                 promotionChar = 'b';
                 break;
             default:
-                ENGINE_FATAL(
-                    "uci", "promotion piece is not valid: ", move.promotionPiece);
+                ENGINE_FATAL("uci", "promotion piece is not valid: ", move.promotionPiece);
         }
         res += promotionChar;
     }

@@ -78,7 +78,9 @@ int generatePieceCapture(const Board& board, Piece movePiece, BitMove* buffer)
 
             if (isCapture == false)
             {
-                ENGINE_FATAL("generate move", "generated non-capture move in a function that can only generate captures.");
+                ENGINE_FATAL(
+                    "generate move",
+                    "generated non-capture move in a function that can only generate captures.");
             }
 
             buffer[cnt++] = makeBitMove(positionToSquare(fromPos),

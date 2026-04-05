@@ -2,10 +2,10 @@
 #include "Structure_IO.h"
 #include "board/Board.h"
 #include "board/Piece.h"
+#include "debug/validation.h"
 #include "evaluate/Material_Point.h"
 #include "evaluate/PST.h"
 #include "search/Zobrist.h"
-#include "debug/validation.h"
 
 void doRegularMove(Board& board, const MoveState& state)
 {
