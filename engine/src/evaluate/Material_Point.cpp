@@ -1,7 +1,6 @@
 #include "evaluate/Material_Point.h"
 
 #include "board/Board.h"
-#include "debug.h"
 
 int pieceValue(const Piece p)
 {

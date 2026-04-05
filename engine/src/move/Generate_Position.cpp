@@ -1,6 +1,5 @@
 #include "move/Generate_Position.h"
 #include "board/Board.h"
-#include "debug.h"
 #include "move/Move_Direction.h"
 
 int generatePosFromPosWithJumpPiece(const Board& board,

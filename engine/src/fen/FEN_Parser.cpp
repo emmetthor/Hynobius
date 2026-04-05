@@ -1,5 +1,4 @@
 #include "fen/FEN_Parser.h"
-#include "debug.h"
 #include "evaluate/Material_Point.h"
 #include "evaluate/PST.h"
 #include "search/Zobrist.h"

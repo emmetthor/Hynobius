@@ -1,4 +1,3 @@
-#include "debug.h"
 #include "fen/FEN_Parser.h"
 
 #include <iostream>

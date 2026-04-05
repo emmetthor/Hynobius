@@ -5,7 +5,6 @@
 #include "board/Board.h"
 #include "board/Check.h"
 #include "board/Piece.h"
-#include "debug.h"
 #include "move/Generate_Position.h"
 #include "move/Make_BitMove.h"
 #include "move/Move.h"

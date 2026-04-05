@@ -1,7 +1,6 @@
 #include "UCI/UCI.h"
 #include "Structure_IO.h"
 #include "UCI/UCI_Move_Parcer.h"
-#include "debug.h"
 #include "move/Move.h"
 #include "pgn/Pgn_Transformer.h"
 

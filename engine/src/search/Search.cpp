@@ -7,7 +7,6 @@
 #include "Structure_IO.h"
 #include "board/Board.h"
 #include "board/Check.h"
-#include "debug.h"
 #include "evaluate/Evaluate.h"
 #include "evaluate/Material_Point.h"
 #include "move/Generate_Move.h"

@@ -2,7 +2,6 @@
 
 #include "board/Attack.h"
 #include "board/Board.h"
-#include "debug.h"
 #include "move/Move_Direction.h"
 
 int countPawnAttacks(const Board& board, Position pos, const Player player)

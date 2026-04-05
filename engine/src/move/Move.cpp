@@ -2,7 +2,6 @@
 #include "board/Attack.h"
 #include "board/Board.h"
 #include "board/Piece.h"
-#include "debug.h"
 #include <algorithm>
 #include <assert.h>
 

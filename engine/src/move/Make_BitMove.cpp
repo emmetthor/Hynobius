@@ -2,7 +2,6 @@
 #include "Structure_IO.h"
 #include "board/Board.h"
 #include "board/Piece.h"
-#include "debug.h"
 #include "evaluate/Material_Point.h"
 #include "evaluate/PST.h"
 #include "search/Zobrist.h"
