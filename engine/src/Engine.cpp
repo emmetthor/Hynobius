@@ -4,10 +4,8 @@
 #include "board/Piece.h"
 #include "fen/FEN_Parser.h"
 #include "move/Make_BitMove.h"
-#include "move/Make_Move.h"
 #include "move/Move.h"
 #include "search/Search.h"
-#include <algorithm>
 
 Engine::Engine() {}
 

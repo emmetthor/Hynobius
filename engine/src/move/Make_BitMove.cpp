@@ -316,9 +316,9 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     // update Zobrist.
     updateZobristDo(board, state, oldCastleRights, newCastelRights);
 
-    assert(board.materialScore == computePieceValue(board));
-    assert(board.PSTScore == computePST(board));
-    assert(board.zobristKey == computeZobrist(board));
+    ENGINE_ASSERT(board.materialScore == computePieceValue(board));
+    ENGINE_ASSERT(board.PSTScore == computePST(board));
+    ENGINE_ASSERT(board.zobristKey == computeZobrist(board));
 }
 
 void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
@@ -342,7 +342,7 @@ void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
 
     computePiecePos(board);
 
-    assert(board.materialScore == computePieceValue(board));
-    assert(board.PSTScore == computePST(board));
-    assert(board.zobristKey == computeZobrist(board));
+    ENGINE_ASSERT(board.materialScore == computePieceValue(board));
+    ENGINE_ASSERT(board.PSTScore == computePST(board));
+    ENGINE_ASSERT(board.zobristKey == computeZobrist(board));
 }
