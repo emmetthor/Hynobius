@@ -1,12 +1,13 @@
 #pragma once
 
 #include "board/Board.h"
+#include "board/Piece.h"
+#include "evaluate/Material_Point.h"
 #include "debug/log.h"
 
 inline void checkBoardState(const Board& board)
 {
-#ifdef ENGINE_VALIDATE
-
+    #ifdef ENGINE_DEBUG
     // king must exist
     int whiteKing = 0;
     int blackKing = 0;
@@ -24,13 +25,35 @@ inline void checkBoardState(const Board& board)
                 continue;
 
             // king 檢查
-            if (p == Piece::WHITE_KING)
+            if (p == Piece::WKING)
                 whiteKing++;
-            if (p == Piece::BLACK_KING)
+            if (p == Piece::BKING)
                 blackKing++;
 
             // material
             recomputedMaterial += pieceValue(p) * (isWhite(p) ? 1 : -1);
+        }
+    }
+
+    // check piece pos
+    bool visi[8][8] = {};
+    for (int i = 1; i <= 12; i++)
+    {
+        for (int j = 0; j < board.pieceCount[i]; j++)
+        {
+            auto [r, c] = board.piecePos[i][j];
+            
+            if (board.board[r][c] != static_cast<Piece>(i))
+            {
+                throw std::runtime_error("piece pos is incorrect");
+            }
+
+            if (visi[r][c] == 1)
+            {
+                throw std::runtime_error("piece pos has overlapped positions");
+            }
+
+            visi[r][c] = 1;
         }
     }
 
@@ -50,6 +73,5 @@ inline void checkBoardState(const Board& board)
                      " recomputed=",
                      recomputedMaterial);
     }
-
-#endif
+    #endif
 }
