@@ -8,7 +8,7 @@
     include_directories(engine/include)
 
     # add_definitions(-D_GLIBCXX_DEBUG)
-    add_definitions(-DENGINE_DEBUG)
+    # add_definitions(-DENGINE_DEBUG)
 
     # 目標檔案
     add_library(engine-core
@@ -16,6 +16,8 @@
         engine/src/board/Board.cpp
         engine/src/board/Attack.cpp
         engine/src/board/Check.cpp
+
+        engine/src/debug/Perft.cpp
 
         engine/src/move/Move.cpp
         engine/src/move/Move_Order.cpp
@@ -47,7 +49,7 @@
 
         engine/src/command/UCI.cpp
         engine/src/command/UCI_Move_Parser.cpp
-        engine/src/command/CLI.cpp
+        engine/src/command/CLI/CLI.cpp
 
         engine/src/Engine.cpp
     )

@@ -1,0 +1,101 @@
+#include "command/CLI/CLI.h"
+#include "debug/perft.h"
+#include "fen/FEN_Parser.h"
+#include "board/Board.h"
+
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define END     RESET << '\n' << std::flush
+
+#include <stdexcept>
+#include <string>
+
+Config parseArgs(int argc, char* argv[])
+{
+    Config cfg;
+
+    for (int i = 1; i < argc; i++)
+    {
+        std::string arg = argv[i];
+
+        if (arg == "--fen")
+        {
+            if (i + 1 >= argc)
+                throw std::runtime_error("--fen requires a value");
+            cfg.fen = argv[++i];
+        }
+        else if (arg == "--perft")
+        {
+            if (i + 1 >= argc)
+                throw std::runtime_error("--perft requires a depth");
+            cfg.depth = std::stoi(argv[++i]);
+            cfg.mode = RunMode::PERFT;
+        }
+        else if (arg == "--divide")
+        {
+            if (i + 1 >= argc)
+                throw std::runtime_error("--divide requires a depth");
+            cfg.depth = std::stoi(argv[++i]);
+            cfg.mode = RunMode::PERFT_DIVIDE;
+        }
+        else if (arg == "--stats")
+        {
+            if (i + 1 >= argc)
+                throw std::runtime_error("--stats requires a depth");
+            cfg.depth = std::stoi(argv[++i]);
+            cfg.mode = RunMode::PERFT_STATS;
+        }
+        else
+        {
+            throw std::runtime_error("unknown argument: " + arg);
+        }
+    }
+
+    if (cfg.mode == RunMode::NONE)
+        throw std::runtime_error("no mode specified. use --perft / --divide / --stats");
+
+    if (cfg.depth < 0)
+        throw std::runtime_error("depth must be >= 0");
+
+    return cfg;
+}
+
+int runCommand(const Config& cfg)
+{
+    switch (cfg.mode)
+    {
+    case RunMode::PERFT:
+    {
+        Board board = cinFenToBoard(cfg.fen);
+        std::cout << "nodes=" << GREEN << perft(board, cfg.depth) << END;
+
+        return 0;
+    }
+    case RunMode::PERFT_STATS:
+    {
+        Board board = cinFenToBoard(cfg.fen);
+        PerftStats stats = perftWithStat(board, cfg.depth);
+
+        std::cout << "nodes=" << GREEN << stats.nodes << END;
+        std::cout << "captures=" << GREEN << stats.captures << END;
+        std::cout << "enPassants=" << GREEN << stats.enPassants << END;
+        std::cout << "castles=" << GREEN << stats.castles << END;
+        std::cout << "promotions=" << GREEN << stats.promotions << END;
+        std::cout << "checks=" << GREEN << stats.checks << END;
+
+        return 0;
+    }
+    case RunMode::PERFT_DIVIDE:
+    {
+        std::cout << "test perft divide" << END;
+        return 0;
+    }
+    default:
+        throw std::runtime_error("unknown command");
+    }
+
+    return 0;
+}

@@ -1,11 +1,23 @@
 #include "Engine.h"
-#include "command/CLI.h"
+#include "command/CLI/CLI.h"
+#include "command/UCI.h"
 
-int main()
+int main(int argc, char* argv[])
 {
     Engine engine;
 
-    cliLoop(engine);
+    if (argc > 1)
+    {
+        // argv CLI
+        Config cfg = parseArgs(argc, argv);
+        return runCommand(cfg);
+    }
+    else
+    {
+        // loop UCI
+        Engine engine;
+        uciLoop(engine);
+    }
 
     return 0;
 }
