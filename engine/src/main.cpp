@@ -1,11 +1,11 @@
 #include "Engine.h"
-#include "command/UCI.h"
+#include "command/CLI.h"
 
 int main()
 {
     Engine engine;
 
-    uciLoop(engine);
+    cliLoop(engine);
 
     return 0;
 }

@@ -121,6 +121,9 @@ void handleBench(std::istringstream& iss, Engine& engine)
 
 void uciLoop(Engine& engine)
 {
+    std::cout << "id name engine1\nid author EmmetThor\n";
+    std::cout << "uciok\n" << std::flush;
+
     std::string line;
     while (std::getline(std::cin, line))
     {

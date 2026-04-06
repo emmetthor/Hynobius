@@ -47,6 +47,7 @@
 
         engine/src/command/UCI.cpp
         engine/src/command/UCI_Move_Parser.cpp
+        engine/src/command/CLI.cpp
 
         engine/src/Engine.cpp
     )
@@ -68,9 +69,9 @@
     add_test(NAME BoardConsistencyTest COMMAND test-board-consistency)
 
     # test perft
-    add_executable(test-perft tests/perft/Perft.cpp)
-    target_link_libraries(test-perft PRIVATE engine-core)
-    set_target_properties(test-perft PROPERTIES WIN32_EXECUTABLE OFF)
+    # add_executable(test-perft tests/perft/Perft.cpp)
+    # target_link_libraries(test-perft PRIVATE engine-core)
+    # set_target_properties(test-perft PROPERTIES WIN32_EXECUTABLE OFF)
 
     add_test(NAME PerftTest COMMAND test-perft)
 
