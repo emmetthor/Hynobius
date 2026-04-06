@@ -70,7 +70,7 @@ int runCommand(const Config& cfg)
     case RunMode::PERFT:
     {
         Board board = cinFenToBoard(cfg.fen);
-        std::cout << "nodes=" << GREEN << perft(board, cfg.depth) << END;
+        std::cout << "nodes=" << perft(board, cfg.depth) << END;
 
         return 0;
     }
@@ -79,12 +79,12 @@ int runCommand(const Config& cfg)
         Board board = cinFenToBoard(cfg.fen);
         PerftStats stats = perftWithStat(board, cfg.depth);
 
-        std::cout << "nodes=" << GREEN << stats.nodes << END;
-        std::cout << "captures=" << GREEN << stats.captures << END;
-        std::cout << "enPassants=" << GREEN << stats.enPassants << END;
-        std::cout << "castles=" << GREEN << stats.castles << END;
-        std::cout << "promotions=" << GREEN << stats.promotions << END;
-        std::cout << "checks=" << GREEN << stats.checks << END;
+        std::cout << "nodes=" << stats.nodes << END;
+        std::cout << "captures=" << stats.captures << END;
+        std::cout << "enPassants=" << stats.enPassants << END;
+        std::cout << "castles=" << stats.castles << END;
+        std::cout << "promotions=" << stats.promotions << END;
+        std::cout << "checks=" << stats.checks << END;
 
         return 0;
     }

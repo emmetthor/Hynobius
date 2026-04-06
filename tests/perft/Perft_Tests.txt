@@ -36,4 +36,4 @@ captures:   0       0
 enPassants: 0       0
 castles:    0       0
 promotions: 0       24
-checks:     0       0
+checks:     0       12

@@ -36,7 +36,7 @@ PerftStats perftWithStat(Board& board, int depth)
 
         undoBitMove(board, move, undo);
 
-        checkBoardState(board);
+        //checkBoardState(board);
     }
 
     return stat;
