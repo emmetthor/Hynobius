@@ -8,7 +8,7 @@
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
-#define END RESET << '\n' << std::flush
+#define END  '\n' << std::flush
 
 #include <stdexcept>
 #include <string>
