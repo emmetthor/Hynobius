@@ -1,9 +1,9 @@
 #include "command/UCI.h"
 #include "Structure_IO.h"
+#include "Time_Management.h"
 #include "command/UCI_Move_Parcer.h"
 #include "move/Move.h"
 #include "pgn/Pgn_Transformer.h"
-#include "Time_Management.h"
 
 #include <iostream>
 #include <sstream>

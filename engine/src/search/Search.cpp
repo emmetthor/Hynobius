@@ -45,8 +45,8 @@ bool Search::shouldStop()
     if (limits.maxTimeMs != -1)
     {
         auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-            now - state.startTime).count();
+        auto elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - state.startTime).count();
 
         if (elapsed >= limits.maxTimeMs)
         {
@@ -76,13 +76,7 @@ SearchResult Search::findBestMove(const Board& board)
     // set max depth.
     int maxDepth = limits.maxDepth == -1 ? SearchVarialble::MAX_SEARCH_DEPTH : limits.maxDepth;
 
-    state = {
-        false,
-        false,
-        0,
-        0,
-        std::chrono::steady_clock::now()
-    };
+    state = {false, false, 0, 0, std::chrono::steady_clock::now()};
 
     for (int d = 1; d <= maxDepth; d++)
     {
@@ -223,7 +217,6 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             return TIMEOUT_SCORE;
     }
 
-
     // tt table
     ttProbe++;
     int ttScore = 0;
@@ -285,7 +278,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             // search fully in the first move (it may be the best move while setting a range of
             // alpha and beta for other moves.)
             score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
-            
+
             // time check.
             if (score == -TIMEOUT_SCORE)
             {
@@ -296,7 +289,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         else
         {
             score = -negamax(board, searchDepth, -alpha - 1, -alpha, ply + 1);
-            
+
             // time check.
             if (score == -TIMEOUT_SCORE)
             {
@@ -307,7 +300,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             if (score > alpha)
             {
                 score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
-            
+
                 // time check.
                 if (score == -TIMEOUT_SCORE)
                 {
