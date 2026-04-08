@@ -4,6 +4,9 @@
 #include "move/Generate_Move.h"
 #include "move/Make_BitMove.h"
 
+#include "Structure_IO.h"
+#include <iostream>
+
 PerftStats perftWithStat(Board& board, int depth)
 {
     BitMove moves[256];
@@ -23,7 +26,7 @@ PerftStats perftWithStat(Board& board, int depth)
         {
             stat.nodes++;
             stat.captures += (getCapture(move) == true ? 1 : 0);
-            stat.enPassants = 0; // WARN en passants are not implemented yet.
+            stat.enPassants += (getEnPassant(move) == true ? 1 : 0);
             stat.castles += (getCastle(move) == true ? 1 : 0);
             stat.promotions += (getPromotion(move) == true ? 1 : 0);
             // player now is the enemy because we've functioned doBitMove.

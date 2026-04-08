@@ -12,7 +12,7 @@ struct MoveState
 
     Piece movePiece, capturedPiece, placedPiece;
 
-    bool isCastle, isPromotion, isCapture;
+    bool isCastle, isPromotion, isCapture, isEnPassant;
 
     Player player;
 
@@ -24,7 +24,17 @@ struct MoveState
         to = squareToPosition(getToSquare(move));
 
         movePiece = board.at(from);
-        capturedPiece = board.at(to);
+        if (getEnPassant(move))
+        {
+            Position capturePos = {from.row, to.col};
+            capturedPiece = board.at(capturePos);
+
+            ENGINE_ASSERT(capturedPiece == makePiece(opponent(board.player), 'P'));
+        }
+        else
+        {
+            capturedPiece = board.at(to);
+        }
 
         isCastle = getCastle(move);
         isPromotion = getPromotion(move);
@@ -42,6 +52,8 @@ struct MoveState
         player = board.player;
 
         castleRights = board.castleRights;
+
+        isEnPassant = getEnPassant(move);
     }
 };
 
@@ -54,6 +66,8 @@ struct UndoState
     Position to;
     bool isCastle;
     bool isPromotion;
+    bool isEnPassant;
+    Position enPassantPos;
 
     int castleRights;
     int materialScore;
@@ -71,6 +85,8 @@ struct UndoState
         to = state.to;
         isCastle = state.isCastle;
         isPromotion = state.isPromotion;
+        isEnPassant = state.isEnPassant;
+        enPassantPos = board.enPassantPos;
         castleRights = board.castleRights;
         materialScore = board.materialScore;
         PSTScore = board.PSTScore;

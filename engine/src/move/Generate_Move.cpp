@@ -1,3 +1,4 @@
+#include "debug/validation.h"
 #pragma GCC optimize("O3,unroll-loops")
 
 #include "Type.h"
@@ -100,7 +101,6 @@ int generatePawnQuietMoves(const Board& board, BitMove* buffer)
 {
     Player player = board.player;
     ENGINE_ASSERT(isPlayerValid(player));
-    ENGINE_ASSERT(validatePiecePos(board));
 
     int cnt = 0;
     Piece pawn = makePiece(player, 'P'), knight = makePiece(player, 'N'),
@@ -167,7 +167,6 @@ int generatePawnCaptures(const Board& board, BitMove* buffer)
 {
     Player player = board.player;
     ENGINE_ASSERT(isPlayerValid(player));
-    ENGINE_ASSERT(validatePiecePos(board));
 
     int cnt = 0;
     Piece pawn = makePiece(player, 'P'), knight = makePiece(player, 'N'),
@@ -232,7 +231,6 @@ int generateEnPassants(const Board& board, BitMove* buffer)
 
     Player player = board.player;
     ENGINE_ASSERT(isPlayerValid(player));
-    ENGINE_ASSERT(validatePiecePos(board));
 
     int cnt = 0;
     Piece pawn = makePiece(player, 'P'), knight = makePiece(player, 'N'),
@@ -404,7 +402,7 @@ int generateAllMoves(const Board& board, BitMove* buffer)
 {
     Player player = board.player;
     ENGINE_ASSERT(isPlayerValid(player));
-    ENGINE_ASSERT(validatePiecePos(board));
+    checkBoardState(board);
 
     int cnt = 0;
     Piece pawn = makePiece(player, 'P'), knight = makePiece(player, 'N'),
@@ -430,7 +428,7 @@ int generateCaptureMoves(const Board& board, BitMove* buffer)
 {
     Player player = board.player;
     ENGINE_ASSERT(isPlayerValid(player));
-    ENGINE_ASSERT(validatePiecePos(board));
+    checkBoardState(board);
 
     int cnt = 0;
     Piece pawn = makePiece(player, 'P'), knight = makePiece(player, 'N'),
@@ -454,7 +452,7 @@ int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, BitMo
     int cnt = 0;
     Board copyBoard = board;
 
-    ENGINE_ASSERT(validatePiecePos(board));
+    checkBoardState(board);
 
     for (int i = 0; i < nAllMoves; i++)
     {
@@ -477,6 +475,8 @@ int filterLegalMoves(const Board& board, BitMove* allMoves, int nAllMoves, BitMo
 int generateAllLegalMoves(const Board& board, Move* buffer)
 {
     ENGINE_ASSERT(isPlayerValid(board.player));
+
+    checkBoardState(board);
 
     BitMove allMoves[2000];
     int nAll = generateAllMoves(board, allMoves);

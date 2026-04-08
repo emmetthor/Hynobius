@@ -4,6 +4,7 @@
 #include "board/Piece.h"
 #include "debug/log.h"
 #include "evaluate/Material_Point.h"
+#include "Structure_IO.h"
 
 inline void checkBoardState(const Board& board)
 {
@@ -60,12 +61,14 @@ inline void checkBoardState(const Board& board)
     // king invariant
     if (whiteKing != 1 || blackKing != 1)
     {
+        DOUT("EVAL") << '\n' << board << '\n';
         ENGINE_FATAL("BOARD", "invalid king count ", "white=", whiteKing, " black=", blackKing);
     }
 
     // material invariant
     if (recomputedMaterial != board.materialScore)
     {
+        DOUT("EVAL") << '\n' << board << '\n';
         ENGINE_FATAL("EVAL",
                      "material mismatch ",
                      "cached=",

@@ -82,6 +82,23 @@ int updateCastleRights(int castleRights, const MoveState& state)
     return castleRights;
 }
 
+Position updateEnPassantPos(const MoveState& state)
+{
+    // default: no en passant available
+    if (state.movePiece != makePiece(state.player, 'P'))
+        return POS_NONE;
+
+    int dr = state.to.row - state.from.row;
+
+    // pawn double push only
+    if (dr == 2 || dr == -2)
+    {
+        return Position{(state.from.row + state.to.row) / 2, state.from.col};
+    }
+
+    return POS_NONE;
+}
+
 void doCastling(Board& board, const MoveState& state)
 {
     // move king.
@@ -159,6 +176,29 @@ void undoCastling(Board& board, const UndoState& state)
     board.set(rookTo, rook);
 }
 
+void doEnPassant(Board &board, MoveState& state)
+{
+    board.set(state.from, Piece::EMPTY);
+    board.set(state.to, state.movePiece);
+
+    Position capturePos = {state.from.row, state.to.col};
+
+    ENGINE_ASSERT(state.capturedPiece == makePiece(opponent(state.player), 'P'));
+
+    state.capturedPiece = board.at(capturePos);
+
+    board.set(capturePos, Piece::EMPTY);
+}
+
+void undoEnPassant(Board &board, const UndoState& state)
+{
+    board.set(state.from, state.movePiece);
+    board.set(state.to, Piece::EMPTY);
+
+    Position capturePos = {state.from.row, state.to.col};
+    board.set(capturePos, state.capturedPiece);
+}
+
 void updateMaterialScoreDo(Board& board, const MoveState& state, int weight)
 {
     if (state.isCastle)
@@ -187,6 +227,13 @@ void updatePSTScoreDo(Board& board, const MoveState& state, int weight)
 
     // placed piece arrives at to
     board.PSTScore += weight * evaluatePieceSquare(state.placedPiece, state.to);
+
+    if (state.isEnPassant)
+    {
+        Position capturedPos = {state.from.row, state.to.col};
+        board.PSTScore += weight * evaluatePieceSquare(state.capturedPiece,  capturedPos);
+        return;
+    }
 
     // captured piece disappears
     if (state.isCapture)
@@ -236,14 +283,20 @@ void updateZobristDo(Board& board, const MoveState& state, int oldCastleRights, 
     // placed piece arrives at to
     board.zobristKey ^= zobPiece[placedPieceIndex][zobBoardPosition(state.to)];
 
+    if (state.isEnPassant)
+    {
+        Position capturedPos = {state.from.row, state.to.col};
+        board.zobristKey ^= zobPiece[pieceToIndex(state.capturedPiece)][zobBoardPosition(capturedPos)];
+    }
+
     // captured piece disappears
-    if (state.isCapture)
+    else if (state.isCapture)
     {
         board.zobristKey ^= zobPiece[capturedPieceIndex][zobBoardPosition(state.to)];
     }
 
     // castling
-    if (state.isCastle)
+    else if (state.isCastle)
     {
         Position rookFrom, rookTo;
 
@@ -286,7 +339,12 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     // do move
     if (state.isCastle)
     {
+        std::cout << "en passant\n";
         doCastling(board, state);
+    }
+    else if (state.isEnPassant)
+    {
+        doEnPassant(board, state);
     }
     else
     {
@@ -297,6 +355,9 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     int oldCastleRights = state.castleRights;
     int newCastelRights = updateCastleRights(oldCastleRights, state);
     board.castleRights = newCastelRights;
+
+    // update en passant position.
+    board.enPassantPos = updateEnPassantPos(state);
 
     // calculate weight
     int weight = (state.player == Player::WHITE ? 1 : -1);
@@ -325,12 +386,17 @@ void undoBitMove(Board& board, const BitMove move, const UndoState& undo)
     {
         undoCastling(board, undo);
     }
+    else if (undo.isEnPassant)
+    {
+        undoEnPassant(board, undo);
+    }
     else
     {
         board.set(undo.to, undo.capturedPiece);
         board.set(undo.from, undo.movePiece);
     }
 
+    board.enPassantPos = undo.enPassantPos;
     board.castleRights = undo.castleRights;
     board.materialScore = undo.materialScore;
     board.PSTScore = undo.PSTScore;

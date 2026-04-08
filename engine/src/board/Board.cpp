@@ -94,26 +94,6 @@ void Board::set(Position pos, Piece p)
     board[pos.row][pos.col] = p;
 }
 
-bool validatePiecePos(const Board& b)
-{
-    for (int i = 1; i <= 12; i++)
-    {
-        Piece p = Piece(i);
-        int cnt = b.getPieceCount(p);
-        for (int j = 0; j < cnt; j++)
-        {
-            auto [r, c] = b.getPiecePos(p)[j];
-            if (b.board[r][c] != p)
-            {
-                // std::cout << p << ' ' << r << ' ' << c << '\n' << b << '\n';
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
 void computePiecePos(Board& board)
 {
     for (int i = 1; i <= 12; i++)
