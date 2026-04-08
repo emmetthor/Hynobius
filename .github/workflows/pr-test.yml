@@ -23,17 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-
-      # Debug / sanitizer build for correctness tests
       - name: Configure Debug Build
         run: |
           cmake -B ${{ github.workspace }}/build-debug -S . \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -DENGINE_DEBUG" \
-            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+            -DCMAKE_CXX_FLAGS="-DENGINE_DEBUG"
 
       - name: Build Debug
         run: |
@@ -54,26 +48,12 @@ jobs:
       - name: BitMove Test
         working-directory: ${{ github.workspace }}/build-debug
         run: ctest -R BitMoveTest --verbose
-
-      # Release build for perft
-      - name: Configure Release Build
-        run: |
-          cmake -B ${{ github.workspace }}/build-release -S . \
-            -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build Release
-        run: |
-          cmake --build ${{ github.workspace }}/build-release --config Release
-
-      - name: Perft regression
-        run: |
-          python tests/perft/Perft_Test.py \
-            --engine build-release/Hynobius \
-            --file tests/perft/Perft_Tests.txt \
-            --max-depth 5
+  perft:
+    needs: test
+    uses: ./.github/workflows/perft.yml
 
   sanitizers:
-    needs: test
+    needs: perft
     uses: ./.github/workflows/sanitizers.yml
 
   small-test:
