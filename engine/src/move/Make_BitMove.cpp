@@ -340,7 +340,6 @@ void doBitMove(Board& board, const BitMove move, UndoState& undo)
     // do move
     if (state.isCastle)
     {
-        std::cout << "en passant\n";
         doCastling(board, state);
     }
     else if (state.isEnPassant)
