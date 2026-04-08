@@ -1,6 +1,7 @@
 #include "search/Search.h"
 #include "board/Piece.h"
 #include "move/Make_BitMove.h"
+#include "search/Search_Variables.h"
 
 #pragma GCC optimize("O3,unroll-loops")
 
@@ -11,6 +12,7 @@
 #include "evaluate/Material_Point.h"
 #include "move/Generate_Move.h"
 #include "move/Move.h"
+#include "move/Move_Order.h"
 #include "search/TT.h"
 #include <chrono>
 
@@ -35,13 +37,35 @@ void printInfo(SearchInfo info)
     std::cout << " score " << info.score << '\n';
 }
 
+bool Search::shouldStop()
+{
+    if (state.stopped)
+        return true;
+
+    if (limits.maxTimeMs != -1)
+    {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - state.startTime).count();
+
+        if (elapsed >= limits.maxTimeMs)
+        {
+            state.stopped = true;
+            state.timeout = true;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 Search::Search(Evaluate& _eval)
 {
     eval = _eval;
 }
 
 // find the best move of the current board. (base search)
-SearchResult Search::findBestMove(const Board& board, int depth)
+SearchResult Search::findBestMove(const Board& board)
 {
     auto startTime = std::chrono::steady_clock::now();
 
@@ -49,12 +73,19 @@ SearchResult Search::findBestMove(const Board& board, int depth)
     SearchResult finalRes = {inValidMove, -INF};
     int lastScore = 0;
 
-    for (int d = 1; d <= depth; d++)
+    // set max depth.
+    int maxDepth = limits.maxDepth == -1 ? SearchVarialble::MAX_SEARCH_DEPTH : limits.maxDepth;
+
+    state = {false, false, 0, 0, std::chrono::steady_clock::now()};
+
+    for (int d = 1; d <= maxDepth; d++)
     {
         SearchResult currentRes = {inValidMove, -INF};
         SearchInfo info;
 
-        // LOG_DEBUG(DebugCategory::SEARCH, "depth: ", d);
+        // time check.
+        if (shouldStop())
+            break;
 
         if (d == 1)
         {
@@ -72,6 +103,10 @@ SearchResult Search::findBestMove(const Board& board, int depth)
 
             while (true)
             {
+                // time check.
+                if (shouldStop())
+                    break;
+
                 currentRes = searchRootCore(copyBoard, d, alpha, beta, finalRes.bestMove, 0);
 
                 int score = currentRes.bestScore;
@@ -100,6 +135,9 @@ SearchResult Search::findBestMove(const Board& board, int depth)
             }
         }
 
+        if (shouldStop())
+            break;
+
         lastScore = currentRes.bestScore;
         finalRes = currentRes;
 
@@ -127,13 +165,16 @@ Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterat
     BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
 
-    // WARN removed
+    // WARN removed advMoves
     // sort moves
-    // advanceMoves adv = {iterativeMove, killerMove[0][ply], killerMove[1][ply]};
-    // sortMove(board, moves, nMoves, adv);
+    sortMove(board, moves, nMoves);
 
     for (int i = 0; i < nMoves; i++)
     {
+        // time check.
+        if (shouldStop())
+            break;
+
         BitMove move = moves[i];
 
         UndoState undo;
@@ -144,6 +185,9 @@ Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterat
         int score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
 
         undoBitMove(board, move, undo);
+
+        if (score == -TIMEOUT_SCORE)
+            break;
 
         // LOG_DEBUG(DebugCategory::SEARCH, "move: ", move, " | move score: ", score);
 
@@ -160,6 +204,18 @@ Search::searchRootCore(Board& board, int depth, int alpha, int beta, Move iterat
 int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
 {
     negamaxNodes++;
+
+    // time check.
+    if ((negamaxNodes + qsNodes) & 2047)
+    {
+        // continue searching
+    }
+    else
+    {
+        // check
+        if (shouldStop())
+            return TIMEOUT_SCORE;
+    }
 
     // tt table
     ttProbe++;
@@ -201,9 +257,8 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             return 0;
     }
 
-    // WARN removed
-    // advanceMoves adv = {ttMove, killerMove[0][ply], killerMove[1][ply]};
-    // sortMove(board, moves, nMoves, adv);
+    // WARN removed advanceMoves
+    sortMove(board, moves, nMoves);
 
     for (int i = 0; i < nMoves; i++)
     {
@@ -223,13 +278,35 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             // search fully in the first move (it may be the best move while setting a range of
             // alpha and beta for other moves.)
             score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
+
+            // time check.
+            if (score == -TIMEOUT_SCORE)
+            {
+                undoBitMove(board, move, undo);
+                return TIMEOUT_SCORE;
+            }
         }
         else
         {
             score = -negamax(board, searchDepth, -alpha - 1, -alpha, ply + 1);
+
+            // time check.
+            if (score == -TIMEOUT_SCORE)
+            {
+                undoBitMove(board, move, undo);
+                return TIMEOUT_SCORE;
+            }
+
             if (score > alpha)
             {
                 score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
+
+                // time check.
+                if (score == -TIMEOUT_SCORE)
+                {
+                    undoBitMove(board, move, undo);
+                    return TIMEOUT_SCORE;
+                }
             }
         }
 
@@ -271,6 +348,19 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
 int Search::quietscence(Board& board, int alpha, int beta, int ply)
 {
     qsNodes++;
+
+    // time check.
+    if ((negamaxNodes + qsNodes) & 2047)
+    {
+        // continue searching
+    }
+    else
+    {
+        // check
+        if (shouldStop())
+            return TIMEOUT_SCORE;
+    }
+
     int standerdPoint =
         (board.player == Player::WHITE ? 1 : -1) * eval.evaluateBoard(board, EVALUATE_MODE::FULL);
     if (standerdPoint >= beta)
@@ -281,9 +371,8 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
     BitMove captureMoves[256];
     int nCaptureMoves = generateLegalCaptureMoves(board, captureMoves);
 
-    // WARN removed
-    // advanceMoves adv = {inValidMove, killerMove[0][ply], killerMove[1][ply]};
-    // sortMove(board, captureMoves, nCaptureMoves, adv);
+    // WARN removed advanceMoves
+    sortMove(board, captureMoves, nCaptureMoves);
 
     if (nCaptureMoves == 0)
     {
@@ -312,6 +401,10 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
         score = -quietscence(board, -beta, -alpha, ply + 1);
 
         undoBitMove(board, move, undo);
+
+        // time check.
+        if (score == -TIMEOUT_SCORE)
+            return TIMEOUT_SCORE;
 
         if (score >= beta)
             return score;

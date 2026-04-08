@@ -5,8 +5,10 @@
 #include "evaluate/Evaluate.h"
 #include "move/Make_BitMove.h"
 #include "move/Move.h"
+#include <chrono>
 
 constexpr int MATE_SCORE = 1e6;
+constexpr int TIMEOUT_SCORE = 12345678;
 
 struct SearchInfo
 {
@@ -25,13 +27,24 @@ struct SearchResult
     SearchInfo info;
 };
 
+struct SearchLimits
+{
+    int maxDepth = -1;
+    int64_t maxTimeMs = -1;
+};
+
 class Search
 {
 public:
     Search(Evaluate& _eval);
-    SearchResult findBestMove(const Board& board, int depth);
+    SearchResult findBestMove(const Board& board);
 
     UndoState movestk[SearchVarialble::MAX_SEARCH_DEPTH];
+
+    inline void setSearchLimits(SearchLimits _limits)
+    {
+        limits = _limits;
+    }
 
 private:
     Evaluate eval;
@@ -55,6 +68,21 @@ private:
     const int INF = 1e9;
     Move moveStk[10];
     int backIterator = 0;
+
+    SearchLimits limits;
+
+    struct SearchState
+    {
+        bool stopped = false;
+        bool timeout = false;
+
+        uint64_t negamaxNodes = 0;
+        uint64_t qsNodes = 0;
+
+        std::chrono::steady_clock::time_point startTime;
+    } state;
+
+    bool shouldStop();
 };
 
 void printInfo(SearchInfo info);

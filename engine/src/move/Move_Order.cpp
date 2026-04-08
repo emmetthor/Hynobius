@@ -15,18 +15,11 @@ const int KILLER_1_SCORE = 400000;
 const int KILLER_2_SCORE = 300000;
 const int PROMOTION_SCORE = 750000;
 
-int evaluateMoveScore(const Board& board, const BitMove move, advanceMoves& advMove)
+int evaluateMoveScore(const Board& board, const BitMove move)
 {
     MoveState state(board, move);
 
     int score = 0;
-
-    if (move == advMove.TTMove)
-        score += TT_SCORE;
-    if (move == advMove.killer1)
-        score += KILLER_1_SCORE;
-    if (move == advMove.killer2)
-        score += KILLER_2_SCORE;
 
     if (state.isPromotion)
     {
@@ -46,14 +39,14 @@ int evaluateMoveScore(const Board& board, const BitMove move, advanceMoves& advM
     return score;
 }
 
-void sortMove(const Board& board, BitMove* moves, int nMoves, advanceMoves& advMove)
+void sortMove(const Board& board, BitMove* moves, int nMoves)
 {
     ScoreMove tmp[256];
 
     for (int i = 0; i < nMoves; i++)
     {
         tmp[i].move = moves[i];
-        tmp[i].score = evaluateMoveScore(board, moves[i], advMove);
+        tmp[i].score = evaluateMoveScore(board, moves[i]);
     }
 
     std::sort(tmp,

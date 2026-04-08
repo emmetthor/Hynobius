@@ -14,4 +14,4 @@ struct advanceMoves
     BitMove TTMove, killer1, killer2;
 };
 
-void sortMove(const Board& board, Move* moves, int nMoves, advanceMoves& advMove);
+void sortMove(const Board& board, BitMove* moves, int nMoves);

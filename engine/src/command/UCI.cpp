@@ -1,5 +1,6 @@
 #include "command/UCI.h"
 #include "Structure_IO.h"
+#include "Time_Management.h"
 #include "command/UCI_Move_Parcer.h"
 #include "move/Move.h"
 #include "pgn/Pgn_Transformer.h"
@@ -54,18 +55,44 @@ std::string UCIMoveToString(const Move& move)
 
 void handleGo(std::istringstream& iss, Engine& engine)
 {
-    int depth = 6;
+    TimeManage tm;
     std::string token;
 
     while (iss >> token)
     {
         if (token == "depth")
         {
-            iss >> depth;
+            iss >> tm.depth;
+        }
+        if (token == "wtime")
+        {
+            iss >> tm.wtime;
+        }
+        if (token == "btime")
+        {
+            iss >> tm.btime;
+        }
+        if (token == "winc")
+        {
+            iss >> tm.winc;
+        }
+        if (token == "binc")
+        {
+            iss >> tm.binc;
         }
     }
 
-    Move move = engine.goDepth(depth);
+    Move move;
+
+    if (tm.depth != -1)
+    {
+        move = engine.goDepth(tm.depth);
+    }
+    else // WARN movetime is not implemented yet.
+    {
+        DOUT("UCI") << "start clock search\n";
+        move = engine.goClock(tm);
+    }
 
     std::cout << "bestmove " << UCIMoveToString(move) << '\n';
 }

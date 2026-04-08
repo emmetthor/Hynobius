@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include "Time_Management.h"
 #include "board/Board.h"
 #include "board/Piece.h"
 #include "fen/FEN_Parser.h"
@@ -54,7 +55,8 @@ void Engine::setPlayer(Player player)
 Move Engine::goDepth(int depth, bool isPrintInfo)
 {
     Search search(eval);
-    auto res = search.findBestMove(board, depth);
+    search.setSearchLimits({depth, MAX_THINK_TIME});
+    auto res = search.findBestMove(board);
 
     if (isPrintInfo)
     {
@@ -64,10 +66,17 @@ Move Engine::goDepth(int depth, bool isPrintInfo)
     return res.bestMove;
 }
 
-SearchResult Engine::fullInfoSearch(int depth)
+Move Engine::goClock(const TimeManage& tm)
 {
     Search search(eval);
-    return search.findBestMove(board, depth);
+    search.setSearchLimits(timeManager(tm, board.player));
+
+    auto res = search.findBestMove(board);
+
+    std::cout << "searched\n";
+    printInfo(res.info);
+
+    return res.bestMove;
 }
 
 void Engine::quit() {}

@@ -52,6 +52,7 @@
         engine/src/command/CLI/CLI.cpp
 
         engine/src/Engine.cpp
+        engine/src/Time_Management.cpp
     )
 
     # 正式引擎
