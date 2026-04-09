@@ -1,4 +1,5 @@
 #include "search/Search.h"
+#include "Structure_IO.h"
 #include "board/Board.h"
 #include "board/Check.h"
 #include "evaluate/Evaluate.h"
@@ -7,7 +8,6 @@
 #include "move/Move.h"
 #include "search/Search_Variables.h"
 #include <chrono>
-#include "Structure_IO.h"
 
 void printInfo(const SearchInfo& info)
 {
