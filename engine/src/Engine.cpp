@@ -35,7 +35,7 @@ void Engine::move(Move move)
                     move.promotionPiece,
                     (isValidPieceIndex(pieceToIndex(move.capturePiece)) ? true : false),
                     (move.castle == Castle::NOT ? false : true),
-                    false,
+                    move.isEnPassant,
                     move.isPromotion);
 
     UndoState undo;

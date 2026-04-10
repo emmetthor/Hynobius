@@ -35,6 +35,35 @@ Move parseCastle(Move& move, const Board& board)
     return move;
 }
 
+Move parseEnPassant(Move& move, const Board& board)
+{
+    Piece p = move.movePiece;
+
+    if (p != Piece::WPAWN && p != Piece::BPAWN)
+        return move;
+
+    if (board.enPassantPos == POS_NONE)
+        return move;
+
+    if (move.to != board.enPassantPos)
+        return move;
+
+    if (move.from.col == move.to.col)
+        return move;
+
+    if (board.at(move.to) != Piece::EMPTY)
+        return move;
+
+    move.isEnPassant = true;
+
+    int capturedRow = (move.player == Player::WHITE ? move.to.row + 1 : move.to.row - 1);
+    int capturedCol = move.to.col;
+
+    move.capturePiece = board.board[capturedRow][capturedCol];
+
+    return move;
+}
+
 Move parseUCIMove(const std::string strMove, const Board& board)
 {
     Move move;
@@ -45,6 +74,7 @@ Move parseUCIMove(const std::string strMove, const Board& board)
     move.capturePiece = board.board[move.to.row][move.to.col];
 
     move = parseCastle(move, board);
+    move = parseEnPassant(move, board);
 
     if (strMove.length() == 5)
     {
