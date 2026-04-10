@@ -72,6 +72,16 @@ SearchResult Search::findBestMove(const Board& board)
     // current result is invalid
     SearchResult result = {false, inValidMove, -MAX_SCORE};
 
+    // At least output a valid move
+    BitMove rootMoves[256];
+    int nRootMoves = generateAllLegalMoves(copyBoard, rootMoves);
+    if (nRootMoves > 0)
+    {
+        result.isValid = true;
+        result.bestMove = bitMovetoOriMove(copyBoard, rootMoves[0]);
+        result.bestScore = -MAX_SCORE;
+    }
+
     // set max depth.
     int maxDepth = limits.maxDepth == -1 ? SearchVarialble::MAX_SEARCH_DEPTH : limits.maxDepth;
 
