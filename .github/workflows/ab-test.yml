@@ -45,7 +45,7 @@ on:
       opening_file:
         description: "Opening PGN file path on runner"
         required: false
-        default: "candidate/bench/openings_small.pgn"
+        default: "candidate/bench/openings.pgn"
         type: string
 
 permissions:
