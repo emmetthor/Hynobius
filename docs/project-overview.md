@@ -20,7 +20,7 @@
 | - | - |
 | Attack | 全盤攻擊圖 (`AttackMap`)、檢查格子攻擊 (`countSquareAttacks`) |
 | Board | 棋盤主體 |
-| Check | 檢查玩家是否被將軍 (`isInCheck`)|
+| Check | 檢查玩家是否被將軍 (`isInCheck`) |
 | Piece | 定義棋子、檢查棋子顏色 (`isWhite & isBlack & isSameColor`) |
 
 ### `move/`
@@ -59,7 +59,7 @@
 | - | - |
 | Pgn_Parser | 轉換完整遊戲 PGN 變成合法著法 |
 | Pgn_Transformer | 轉換位置與 PGN (`pgnToPosition & positionToPgn`) |
-| Valid_Piece | 轉換玩家與棋子 (`playerPieceCharToPiece`)|
+| Valid_Piece | 轉換玩家與棋子 (`playerPieceCharToPiece`) |
 
 ## 3. 資料流
 
