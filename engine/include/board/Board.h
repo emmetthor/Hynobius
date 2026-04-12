@@ -135,7 +135,7 @@ struct Board
 
     Position enPassantPos;
 
-    uint64_t keyHistory[SearchVarialble::MAX_GMAE_PLY];
+    uint64_t keyHistory[SearchVarialble::MAX_GAME_PLY];
     int repetitionHistoryLength = 0;
 
     inline void pushRepetitionKey()

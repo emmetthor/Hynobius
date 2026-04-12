@@ -80,6 +80,9 @@ SearchResult Search::findBestMove(const Board& board)
     // make copyBoard non-const.
     Board copyBoard = board;
 
+    // Init repetition history
+    copyBoard.pushRepetitionKey();
+
     // current result is invalid
     SearchResult result = {false, inValidMove, -MAX_SCORE, INVALID_BITMOVE};
 
@@ -130,6 +133,8 @@ SearchResult Search::findBestMove(const Board& board)
         printInfo(info);
     }
 
+    copyBoard.popRepetitionKey();
+
     return result;
 }
 
@@ -140,9 +145,6 @@ Search::chooseMove(Board& board, int depth, int alpha, int beta, int ply, const 
 
     // Clear currecnt PV line
     state.pv.clearLine(ply);
-
-    // Init repetition history
-    board.pushRepetitionKey();
 
     // generate all moves
     BitMove moves[256];
@@ -162,24 +164,31 @@ Search::chooseMove(Board& board, int depth, int alpha, int beta, int ply, const 
     {
         // time check.
         if (shouldStop())
+        {
+            board.popRepetitionKey();
             return {false, inValidMove, -MAX_SCORE, INVALID_BITMOVE};
+        }
 
         BitMove move = moves[i];
 
         UndoState undo;
 
         doBitMove(board, move, undo);
+        board.pushRepetitionKey();
 
         int score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
 
+        board.popRepetitionKey();
         undoBitMove(board, move, undo);
 
         Move oriMove = bitMovetoOriMove(board, move);
         // std::cout << oriMove << " | " << score << '\n';
 
         if (score == -TIMEOUT_SCORE)
+        {
+            board.popRepetitionKey();
             return {false, inValidMove, -MAX_SCORE, INVALID_BITMOVE};
-
+        }
         if (score > result.bestScore)
         {
             result.isValid = true;
