@@ -1,14 +1,20 @@
 #pragma once
 
+#include "Search_Variables.h"
+#include "Type.h"
+#include "debug/log.h"
 #include "move/Move.h"
 
-constexpr int MAX_PLY = 128;
-extern Move killerMove[2][MAX_PLY];
-
-inline void addKillerMove(const Move& move, int ply)
+struct killerMove
 {
-    if (killerMove[0][ply] == move)
-        return;
-    killerMove[1][ply] = killerMove[0][ply];
-    killerMove[0][ply] = move;
-}
+    BitMove table[2][SearchVarialble::MAX_PLY] = {INVALID_BITMOVE};
+    inline void addKillerMove(const BitMove& move, int ply)
+    {
+        ENGINE_ASSERT(ply < SearchVarialble::MAX_PLY);
+
+        if (table[0][ply] == move)
+            return;
+        table[1][ply] = table[0][ply];
+        table[0][ply] = move;
+    }
+};

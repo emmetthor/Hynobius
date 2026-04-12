@@ -67,6 +67,7 @@ struct UndoState
     bool isCastle;
     bool isPromotion;
     bool isEnPassant;
+    bool isCapture;
     Position enPassantPos;
 
     int castleRights;
@@ -86,6 +87,7 @@ struct UndoState
         isCastle = state.isCastle;
         isPromotion = state.isPromotion;
         isEnPassant = state.isEnPassant;
+        isCapture = state.isCapture;
         enPassantPos = board.enPassantPos;
         castleRights = board.castleRights;
         materialScore = board.materialScore;

@@ -151,7 +151,9 @@ Search::chooseMove(Board& board, int depth, int alpha, int beta, int ply, const 
         pvMove = state.prevPv.table[ply][0];
 
     // sort moves
-    sortMove(board, moves, nMoves, {pvMove, INVALID_BITMOVE});
+    advanceMoves adv = {
+        pvMove, INVALID_BITMOVE, state.kill.table[0][ply], state.kill.table[1][ply]};
+    sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++)
     {
@@ -243,7 +245,8 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         pvMove = state.prevPv.table[ply][0];
 
     // Sort moves.
-    sortMove(board, moves, nMoves, {pvMove, ttMove});
+    advanceMoves adv = {pvMove, ttMove, state.kill.table[0][ply], state.kill.table[1][ply]};
+    sortMove(board, moves, nMoves, adv);
 
     // check checkmate / stalemate
     if (nMoves == 0)
@@ -289,7 +292,13 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         }
 
         if (alpha >= beta)
+        {
+            if (!undo.isCapture && !undo.isPromotion)
+            {
+                state.kill.addKillerMove(move, ply);
+            }
             break;
+        }
     }
 
     // define TT flag to store.
@@ -335,7 +344,13 @@ int Search::quietscence(Board& board, int alpha, int beta, int ply)
     int nCaptureMoves = generateLegalCaptureMoves(board, captureMoves);
 
     // Sort moves.
-    sortMove(board, captureMoves, nCaptureMoves, {INVALID_BITMOVE, INVALID_BITMOVE});
+    advanceMoves adv = {
+        INVALID_BITMOVE,
+        INVALID_BITMOVE,
+        INVALID_BITMOVE,
+        INVALID_BITMOVE,
+    };
+    sortMove(board, captureMoves, nCaptureMoves, adv);
 
     if (nCaptureMoves == 0)
     {

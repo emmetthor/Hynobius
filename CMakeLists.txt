@@ -42,7 +42,6 @@
 
         engine/src/search/TT.cpp
         engine/src/search/Zobrist.cpp
-        engine/src/search/Killer_Move.cpp
         engine/src/search/Search.cpp
 
         engine/src/fen/FEN_Parser.cpp
