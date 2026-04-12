@@ -10,7 +10,6 @@
 #include "search/Search_Variables.h"
 #include "search/TT.h"
 #include <chrono>
-#include <iterator>
 
 void printInfo(const SearchInfo& info)
 {
@@ -196,6 +195,9 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
 {
     state.negamaxNodes++;
 
+    // Clear current PV line
+    state.pv.clearLine(ply);
+
     // Probe TT table.
     TTEntry ttOut;
     int ttScore = -MAX_SCORE;
@@ -223,9 +225,6 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         if (shouldStop())
             return TIMEOUT_SCORE;
     }
-
-    // Clear current PV line
-    state.pv.clearLine(ply);
 
     // depth = 0 -> qs search
     if (depth == 0)
