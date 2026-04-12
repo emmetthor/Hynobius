@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Killer_Move.h"
 #include "PV_Table.h"
 #include "board/Board.h"
 #include "evaluate/Evaluate.h"
@@ -59,6 +60,8 @@ private:
         std::chrono::steady_clock::time_point startTime;
 
         PVTable pv, prevPv;
+
+        killerMove kill;
     } state;
 
     bool shouldStop();

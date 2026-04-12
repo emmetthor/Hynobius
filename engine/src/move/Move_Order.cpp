@@ -27,6 +27,13 @@ int evaluateMoveScore(const Board& board, const BitMove move, const advanceMoves
     if (adv.TTMove == move)
         score += TT_SCORE;
 
+    if (adv.killerMove1 == move)
+        score += KILLER_1_SCORE;
+
+    if(adv.killerMove2 == move)
+        score += KILLER_2_SCORE;
+    
+
     if (state.isPromotion)
     {
         // 最先看
