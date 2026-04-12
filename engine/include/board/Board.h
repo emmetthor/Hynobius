@@ -138,6 +138,11 @@ struct Board
     uint64_t keyHistory[SearchVarialble::MAX_GAME_PLY];
     int repetitionHistoryLength = 0;
 
+    inline void clearRepetitionKey()
+    {
+        repetitionHistoryLength = 0;
+    }
+
     inline void pushRepetitionKey()
     {
         ENGINE_ASSERT(repetitionHistoryLength < SearchVarialble::MAX_GMAE_PLY);

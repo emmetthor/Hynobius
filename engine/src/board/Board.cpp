@@ -72,6 +72,7 @@ void Board::init()
 
     enPassantPos = POS_NONE;
 
+    clearRepetitionKey();
     pushRepetitionKey();
 }
 
