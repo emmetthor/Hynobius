@@ -152,11 +152,7 @@ Search::chooseMove(Board& board, int depth, int alpha, int beta, int ply, const 
 
     // sort moves
     advanceMoves adv = {
-        pvMove,
-        INVALID_BITMOVE,
-        state.kill.table[0][ply],
-        state.kill.table[1][ply]
-    };
+        pvMove, INVALID_BITMOVE, state.kill.table[0][ply], state.kill.table[1][ply]};
     sortMove(board, moves, nMoves, adv);
 
     for (int i = 0; i < nMoves; i++)
@@ -249,12 +245,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         pvMove = state.prevPv.table[ply][0];
 
     // Sort moves.
-    advanceMoves adv = {
-        pvMove,
-        ttMove,
-        state.kill.table[0][ply],
-        state.kill.table[1][ply]
-    };
+    advanceMoves adv = {pvMove, ttMove, state.kill.table[0][ply], state.kill.table[1][ply]};
     sortMove(board, moves, nMoves, adv);
 
     // check checkmate / stalemate
