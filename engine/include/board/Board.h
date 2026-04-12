@@ -4,7 +4,7 @@
 #include "Type.h"
 #include "board/Piece.h"
 #include "debug/log.h"
-
+#include "search/Search_Variables.h"
 #include <cstdint>
 
 // Store direct position like `board[pos.row][pos.col]`.
@@ -118,12 +118,6 @@ struct Board
     // Store pieces on the board.
     Piece board[8][8];
 
-    // Store piece positions by their piece type.
-    Position piecePos[13][20];
-
-    // Store the number of every pieces.
-    int pieceCount[13] = {};
-
     int materialScore;
     int PSTScore;
     Player player;
@@ -140,6 +134,27 @@ struct Board
     uint64_t zobristKey;
 
     Position enPassantPos;
+
+    uint64_t keyHistory[SearchVarialble::MAX_GMAE_PLY];
+    int repetitionHistoryLength = 0;
+
+    inline void pushRepetitionKey()
+    {
+        ENGINE_ASSERT(length < SearchVarialble::MAX_GMAE_PLY);
+        keyHistory[repetitionHistoryLength++] = zobristKey;
+    }
+
+    inline void popRepetitionKey()
+    {
+        ENGINE_ASSERT(repetitionHistoryLength != 0);
+        repetitionHistoryLength--;
+    }
+
+    // Store piece positions by their piece type.
+    Position piecePos[13][20];
+
+    // Store the number of every pieces.
+    int pieceCount[13] = {};
 
     // Delete the piece in `target` in `piecePos[Piece]`.
     inline void piecePosDelete(Position* posArray, int& count, const Position& target)
@@ -191,3 +206,21 @@ bool validatePiecePos(const Board& b);
 
 // Generate every piece positions by the current board.
 void computePiecePos(Board& board);
+
+inline bool isRepetition(const Board& board)
+{
+    int count = 0;
+    for (int i = board.repetitionHistoryLength - 1; i > 0; i--) {
+        if (board.zobristKey == board.keyHistory[i])
+        {
+            count++;
+
+            if (count >= 2)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

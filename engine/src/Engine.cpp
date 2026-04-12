@@ -22,11 +22,6 @@ void Engine::setPositionWithFen(const std::string& fen)
 
 void Engine::checkReady() {}
 
-Board Engine::getBoard()
-{
-    return board;
-}
-
 void Engine::move(Move move)
 {
     BitMove bitMove =

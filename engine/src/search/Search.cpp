@@ -141,6 +141,9 @@ Search::chooseMove(Board& board, int depth, int alpha, int beta, int ply, const 
     // Clear currecnt PV line
     state.pv.clearLine(ply);
 
+    // Init repetition history
+    board.pushRepetitionKey();
+
     // generate all moves
     BitMove moves[256];
     int nMoves = generateAllLegalMoves(board, moves);
@@ -200,6 +203,10 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
 
     // Clear current PV line
     state.pv.clearLine(ply);
+
+    // Check repetition
+    if (isRepetition(board))
+        return 0;
 
     // Probe TT table.
     TTEntry ttOut;
@@ -268,6 +275,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
         UndoState undo;
 
         doBitMove(board, move, undo);
+        board.pushRepetitionKey();
 
         bool doLMR = false;
 
@@ -302,6 +310,7 @@ int Search::negamax(Board& board, int depth, int alpha, int beta, int ply)
             score = -negamax(board, depth - 1, -beta, -alpha, ply + 1);
         }
 
+        board.popRepetitionKey();
         undoBitMove(board, move, undo);
 
         // time check

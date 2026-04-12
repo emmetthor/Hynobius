@@ -12,6 +12,7 @@ public:
     Engine();
 
     Evaluate eval;
+    Board board;
 
     void setStartPosition();
     void setPositionWithFen(const std::string& fen);
@@ -20,12 +21,8 @@ public:
     Move goDepth(int depth, bool isPrintInfo = 1);
     Move goClock(const TimeManage& tm);
     SearchResult fullInfoSearch(int depth);
-    Board getBoard();
     void move(Move move);
     void quit();
     void changePlayer();
     void setPlayer(Player player);
-
-private:
-    Board board;
 };

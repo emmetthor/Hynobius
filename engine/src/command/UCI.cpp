@@ -133,8 +133,9 @@ void handlePosition(std::istringstream& iss, Engine& engine)
         std::string strMove;
         while (iss >> strMove)
         {
-            Move move = parseUCIMove(strMove, engine.getBoard());
+            Move move = parseUCIMove(strMove, engine.board);
             engine.move(move);
+            engine.board.pushRepetitionKey();
         }
     }
 }
@@ -181,7 +182,7 @@ void uciLoop(Engine& engine)
         }
         else if (token == "PRINTBOARD")
         {
-            std::cout << engine.getBoard() << '\n';
+            std::cout << engine.board << '\n';
         }
         else if (token == "bench")
         {
