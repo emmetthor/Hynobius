@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PV_Table.h"
 #include "board/Board.h"
 #include "evaluate/Evaluate.h"
 #include "move/Move.h"
@@ -14,6 +15,7 @@ struct SearchResult
     bool isValid = 0;
     Move bestMove;
     int bestScore;
+    BitMove bestBitMove = INVALID_BITMOVE;
 };
 
 struct SearchLimits
@@ -25,6 +27,7 @@ struct SearchLimits
 struct SearchInfo
 {
     int64_t depth, score, nodes, qsnodes, timeMs, nps;
+    PVTable pv;
 };
 
 class Search
@@ -36,7 +39,8 @@ public:
 private:
     Evaluate eval;
 
-    SearchResult chooseMove(Board& board, int depth, int alpha, int beta, int ply);
+    SearchResult
+    chooseMove(Board& board, int depth, int alpha, int beta, int ply, const BitMove PVMove);
 
     int negamax(Board& board, int depth, int alpha, int beta, int ply);
 
@@ -53,6 +57,8 @@ private:
         uint64_t qsNodes = 0;
 
         std::chrono::steady_clock::time_point startTime;
+
+        PVTable pv, prevPv;
     } state;
 
     bool shouldStop();

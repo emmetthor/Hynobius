@@ -11,6 +11,7 @@ struct ScoreMove
 
 struct advanceMoves
 {
+    BitMove PVMove;
     BitMove TTMove;
 };
 

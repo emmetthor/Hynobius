@@ -3,23 +3,26 @@
 #pragma GCC optimize("O3,unroll-loops")
 
 #include "evaluate/Material_Point.h"
-#include "evaluate/SEE.h"
 #include "move/Make_BitMove.h"
 #include "move/Move_Order.h"
 
 #include <algorithm>
 
-const int TT_SCORE = 1000000;
-const int CAPTURE_SCORE = 500000;
-const int KILLER_1_SCORE = 400000;
-const int KILLER_2_SCORE = 300000;
-const int PROMOTION_SCORE = 750000;
+const int TT_SCORE = 600000;
+const int PVMOVE_SCORE = 500000;
+const int PROMOTION_SCORE = 400000;
+const int CAPTURE_SCORE = 300000;
+const int KILLER_1_SCORE = 200000;
+const int KILLER_2_SCORE = 100000;
 
 int evaluateMoveScore(const Board& board, const BitMove move, const advanceMoves& adv)
 {
     MoveState state(board, move);
 
     int score = 0;
+
+    if (adv.PVMove == move)
+        score += PVMOVE_SCORE;
 
     if (adv.TTMove == move)
         score += TT_SCORE;

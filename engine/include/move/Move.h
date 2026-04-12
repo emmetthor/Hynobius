@@ -4,6 +4,7 @@
 #include "board/Board.h"
 #include "board/Piece.h"
 #include "debug/log.h"
+#include "pgn/Pgn_Transformer.h"
 
 enum Castle
 {
@@ -192,6 +193,26 @@ inline Move bitMovetoOriMove(const Board& board, const BitMove& move)
             res.castle = SHORT_CASTLE;
         else if (res.to.col == 2)
             res.castle = LONG_CASTLE;
+    }
+
+    return res;
+}
+
+inline std::string bitMoveToUCIMove(const BitMove& move)
+{
+    if (move == INVALID_BITMOVE)
+    {
+        return "INVALID_BITMOVE";
+    }
+
+    Position from = squareToPosition(getFromSquare(move));
+    Position to = squareToPosition(getToSquare(move));
+
+    std::string res = positionToPgn(from) + positionToPgn(to);
+
+    if (getPromotion(move))
+    {
+        res += std::tolower(pieceToChar(getPromotePiece(move)));
     }
 
     return res;
