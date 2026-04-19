@@ -107,14 +107,46 @@ SearchResult Search::findBestMove(const Board& board)
         if (shouldStop())
             break;
 
-        SearchResult currentResult =
-            chooseMove(copyBoard, depth, -MAX_SCORE, MAX_SCORE, 0, lastBestMove);
+        SearchResult currentResult;
+        if (depth == 1)
+        {
+            currentResult = chooseMove(copyBoard, depth, -MAX_SCORE, MAX_SCORE, 0, lastBestMove);
+        }
+        else
+        {
+            int window = 16;
+
+            while (true)
+            {
+                int alpha = state.prevScore - window;
+                int beta = state.prevScore + window;
+
+                currentResult = chooseMove(copyBoard, depth, alpha, beta, 0, lastBestMove);
+
+                if (!currentResult.isValid)
+                    return result;
+
+                if (currentResult.bestScore <= alpha)
+                {
+                    window *= 2;
+                    continue;
+                }
+                if (currentResult.bestScore >= beta)
+                {
+                    window *= 2;
+                    continue;
+                }
+
+                break;
+            }
+        }
 
         if (currentResult.isValid)
         {
             result = currentResult;
             lastBestMove = result.bestBitMove;
             state.prevPv = state.pv;
+            state.prevScore = result.bestScore;
         }
 
         // print info

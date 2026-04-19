@@ -62,6 +62,8 @@ private:
         PVTable pv, prevPv;
 
         killerMove kill;
+
+        int prevScore = 0;
     } state;
 
     bool shouldStop();
