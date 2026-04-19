@@ -119,7 +119,7 @@ SearchResult Search::findBestMove(const Board& board)
             while (true)
             {
                 int alpha = state.prevScore - window;
-                int beta  = state.prevScore + window;
+                int beta = state.prevScore + window;
 
                 currentResult = chooseMove(copyBoard, depth, alpha, beta, 0, lastBestMove);
 
