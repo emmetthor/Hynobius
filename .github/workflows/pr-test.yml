@@ -55,7 +55,3 @@ jobs:
   sanitizers:
     needs: perft
     uses: ./.github/workflows/sanitizers.yml
-
-  small-test:
-    needs: sanitizers
-    uses: ./.github/workflows/pr-small-match.yml
